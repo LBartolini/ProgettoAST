@@ -10,10 +10,8 @@ public class FilmProjection {
 	private String datetime;
 	private int baseTickets;
 	private int premiumTickets;
-	private int deluxeTickets;
 	
-	public FilmProjection(String id, String name, String room, String datetime, int baseTickets, int premiumTickets,
-			int deluxeTickets) {
+	public FilmProjection(String id, String name, String room, String datetime, int baseTickets, int premiumTickets) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -21,7 +19,6 @@ public class FilmProjection {
 		this.datetime = datetime;
 		this.baseTickets = baseTickets;
 		this.premiumTickets = premiumTickets;
-		this.deluxeTickets = deluxeTickets;
 	}
 
 	public String getId() {
@@ -48,13 +45,9 @@ public class FilmProjection {
 		return premiumTickets;
 	}
 
-	public int getDeluxeTickets() {
-		return deluxeTickets;
-	}
-
 	@Override
 	public int hashCode() {
-		return Objects.hash(baseTickets, datetime, deluxeTickets, id, name, premiumTickets, room);
+		return Objects.hash(baseTickets, datetime, id, name, premiumTickets, room);
 	}
 
 	@Override
@@ -67,7 +60,7 @@ public class FilmProjection {
 			return false;
 		FilmProjection other = (FilmProjection) obj;
 		return baseTickets == other.baseTickets && Objects.equals(datetime, other.datetime)
-				&& deluxeTickets == other.deluxeTickets && Objects.equals(id, other.id)
+				&& Objects.equals(id, other.id)
 				&& Objects.equals(name, other.name) && premiumTickets == other.premiumTickets
 				&& Objects.equals(room, other.room);
 	}
@@ -75,8 +68,7 @@ public class FilmProjection {
 	@Override
 	public String toString() {
 		return "FilmProjection [id=" + id + ", name=" + name + ", room=" + room + ", datetime=" + datetime
-				+ ", baseTickets=" + baseTickets + ", premiumTickets=" + premiumTickets + ", deluxeTickets="
-				+ deluxeTickets + "]";
+				+ ", baseTickets=" + baseTickets + ", premiumTickets=" + premiumTickets + "]";
 	}
 	
 
