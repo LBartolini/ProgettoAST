@@ -6,15 +6,18 @@ public class FilmProjection {
 	
 	private String id;
 	private String name;
+	private String room;
 	private String datetime;
 	private int baseTickets;
 	private int premiumTickets;
 	private int deluxeTickets;
 	
-	public FilmProjection(String id, String name, String datetime, int baseTickets, int premiumTickets,
+	public FilmProjection(String id, String name, String room, String datetime, int baseTickets, int premiumTickets,
 			int deluxeTickets) {
+		super();
 		this.id = id;
 		this.name = name;
+		this.room = room;
 		this.datetime = datetime;
 		this.baseTickets = baseTickets;
 		this.premiumTickets = premiumTickets;
@@ -25,59 +28,33 @@ public class FilmProjection {
 		return id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public String getRoom() {
+		return room;
 	}
 
 	public String getDatetime() {
 		return datetime;
 	}
 
-	public void setDatetime(String datetime) {
-		this.datetime = datetime;
-	}
-
 	public int getBaseTickets() {
 		return baseTickets;
-	}
-
-	public void setBaseTickets(int baseTickets) {
-		this.baseTickets = baseTickets;
 	}
 
 	public int getPremiumTickets() {
 		return premiumTickets;
 	}
 
-	public void setPremiumTickets(int premiumTickets) {
-		this.premiumTickets = premiumTickets;
-	}
-
 	public int getDeluxeTickets() {
 		return deluxeTickets;
 	}
 
-	public void setDeluxeTickets(int deluxeTickets) {
-		this.deluxeTickets = deluxeTickets;
-	}
-
-	@Override
-	public String toString() {
-		return "FilmProjection [id=" + id + ", name=" + name + ", datetime=" + datetime + ", baseTickets=" + baseTickets
-				+ ", premiumTickets=" + premiumTickets + ", deluxeTickets=" + deluxeTickets + "]";
-	}
-
 	@Override
 	public int hashCode() {
-		return Objects.hash(baseTickets, datetime, deluxeTickets, id, name, premiumTickets);
+		return Objects.hash(baseTickets, datetime, deluxeTickets, id, name, premiumTickets, room);
 	}
 
 	@Override
@@ -91,7 +68,16 @@ public class FilmProjection {
 		FilmProjection other = (FilmProjection) obj;
 		return baseTickets == other.baseTickets && Objects.equals(datetime, other.datetime)
 				&& deluxeTickets == other.deluxeTickets && Objects.equals(id, other.id)
-				&& Objects.equals(name, other.name) && premiumTickets == other.premiumTickets;
+				&& Objects.equals(name, other.name) && premiumTickets == other.premiumTickets
+				&& Objects.equals(room, other.room);
+	}
+
+	@Override
+	public String toString() {
+		return "FilmProjection [id=" + id + ", name=" + name + ", room=" + room + ", datetime=" + datetime
+				+ ", baseTickets=" + baseTickets + ", premiumTickets=" + premiumTickets + ", deluxeTickets="
+				+ deluxeTickets + "]";
 	}
 	
+
 }
