@@ -12,17 +12,17 @@ jobs:
         java: [8, 17]
   
   steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK ${{matrix.java}}
-      uses: actions/setup-java@v4
-      with:
-        java-version: ${{matrix.java}}
-    - name: Cache Maven packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml', '**/*.yml') }}
-        restore-keys: ${{ runner.os }}-m2-
-    - name: Build with Maven
-      run: mvn verify
-      working-directory: com.lbartolini.app.cinema
+  - uses: actions/checkout@v2
+  - name: Set up JDK ${{matrix.java}}
+    uses: actions/setup-java@v4
+    with:
+      java-version: ${{matrix.java}}
+  - name: Cache Maven packages
+    uses: actions/cache@v4
+    with:
+      path: ~/.m2
+      key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml', '**/*.yml') }}
+      restore-keys: ${{ runner.os }}-m2-
+  - name: Build with Maven
+    run: mvn verify
+    working-directory: com.lbartolini.app.cinema
