@@ -1,7 +1,6 @@
 name: Java CI with Maven on Linux
 
 on:
-  push:
   pull_request:
 
 jobs:
@@ -9,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [8, 17]
+        java: [8]
   
     steps:
     - uses: actions/checkout@v2
@@ -25,5 +24,5 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml', '**/*.yml') }}
         restore-keys: ${{ runner.os }}-m2-
     - name: Build with Maven
-      run: mvn verify -DskipCoverage
+      run: mvn verify -Pmutation-testing
       working-directory: com.lbartolini.app.cinema
