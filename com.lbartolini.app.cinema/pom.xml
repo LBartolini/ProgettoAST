@@ -88,8 +88,9 @@
           <version>${pitest.version}</version>
           <configuration>
             <targetClasses>
-              <param>com.lbartolini.app.cinema.model.*</param>
               <param>com.lbartolini.app.cinema.controller.*</param>
+              <param>com.lbartolini.app.cinema.repository.*</param>
+              <param>com.lbartolini.app.cinema.view.*</param>
             </targetClasses>
             <targetTests>
               <param>com.lbartolini.app.cinema.controller.*</param>
