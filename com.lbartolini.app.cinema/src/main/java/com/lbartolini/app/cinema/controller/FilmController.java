@@ -1,21 +1,21 @@
 package com.lbartolini.app.cinema.controller;
 
-import java.util.List;
-
-import com.lbartolini.app.cinema.model.FilmProjection;
 import com.lbartolini.app.cinema.repository.FilmRepository;
+import com.lbartolini.app.cinema.view.CinemaView;
 
 public class FilmController {
 	
 	private FilmRepository filmRepository;
+	private CinemaView cinemaView;
 
-	public FilmController(FilmRepository filmRepository) {
+	public FilmController(FilmRepository filmRepository, CinemaView cinemaView) {
 		super();
 		this.filmRepository = filmRepository;
+		this.cinemaView = cinemaView;
 	}
 
-	public List<FilmProjection> getAllFilms() {
-		return filmRepository.getAllFilms();
+	public void getAllFilms() {
+		cinemaView.showAllFilms(filmRepository.getAllFilms());
 	}
 
 }

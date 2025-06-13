@@ -1,9 +1,10 @@
 package com.lbartolini.app.cinema.controller;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.After;
@@ -15,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.lbartolini.app.cinema.model.FilmProjection;
 import com.lbartolini.app.cinema.repository.FilmRepository;
+import com.lbartolini.app.cinema.view.CinemaView;
 
 public class FilmControllerTest {
 	
@@ -25,6 +27,9 @@ public class FilmControllerTest {
 	
 	@Mock
 	private FilmRepository filmRepository;
+
+	@Mock
+	private CinemaView cinemaView;
 
 	@Before
 	public void setUp() throws Exception {
@@ -38,7 +43,11 @@ public class FilmControllerTest {
 
 	@Test
 	public void testGetAllFilmsWhenNoFilmExists() {
-		assertThat(filmController.getAllFilms()).isEmpty();
+		when(filmRepository.getAllFilms()).thenReturn(Collections.emptyList());
+		
+		filmController.getAllFilms();
+		
+		verify(cinemaView).showAllFilms(Collections.emptyList());
 	}
 	
 	@Test
@@ -47,7 +56,9 @@ public class FilmControllerTest {
 				new FilmProjection("XYZ456", "Film B", "Room Y", "25/06/2025 18:45", 10, 10));
 		when(filmRepository.getAllFilms()).thenReturn(films);
 		
-		assertThat(filmController.getAllFilms()).containsExactlyElementsOf(films);
+		filmController.getAllFilms();
+		
+		verify(cinemaView).showAllFilms(films);
 	}
 
 }
