@@ -1,2 +1,2 @@
 # ProgettoAST
-Project for Automated Software Tested @ UniFi
+Project for Automated Software Testing @ UNIFI
