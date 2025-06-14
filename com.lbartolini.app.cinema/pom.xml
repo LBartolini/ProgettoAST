@@ -18,6 +18,7 @@
     <jacoco.version>0.8.12</jacoco.version>
     <mockito.version>4.11.0</mockito.version>
     <assertj.version>3.27.3</assertj.version>
+    <coveralls.version>4.5.0-M6</coveralls.version>
   </properties>
 
   <dependencies>
@@ -81,6 +82,14 @@
               </configuration>
             </execution>
           </executions>
+        </plugin>
+        <plugin>
+          <groupId>com.github.hazendaz.maven</groupId>
+          <artifactId>coveralls-maven-plugin</artifactId>
+          <version>${coveralls.version}</version>
+          <configuration>
+            <repoToken>${env.COVERALLS_REPO_TOKEN}</repoToken>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.pitest</groupId>
