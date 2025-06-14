@@ -7,7 +7,7 @@ public abstract class Ticket {
 	private Film film;
 	private User user;
 	
-	public Ticket(Film film, User user) {
+	protected Ticket(Film film, User user) {
 		super();
 		this.film = film;
 		this.user = user;
@@ -21,7 +21,7 @@ public abstract class Ticket {
 		return user;
 	}
 	
-	abstract public String getTicketType();
+	public abstract String getTicketType();
 
 	@Override
 	public int hashCode() {
