@@ -60,7 +60,7 @@ public class FilmControllerTest {
 	private UserRepository userRepository;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		closeable = MockitoAnnotations.openMocks(this);
 	}
 
@@ -91,8 +91,8 @@ public class FilmControllerTest {
 	
 	@Test
 	public void testBuyBaseTicketWhenNoTicketsAvailableShouldThrowError() {
-		Film FILM = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, 0, FILM_REMAINING_PREMIUM_TICKETS_1);
-		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(FILM);
+		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, 0, FILM_REMAINING_PREMIUM_TICKETS_1);
+		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
 		
 		assertThrows(NoTicketsAvailableException.class, () -> filmController.buyBaseTicket(FILM_ID_1, USERNAME));
 		
@@ -104,10 +104,10 @@ public class FilmControllerTest {
 	
 	@Test
 	public void testBuyBaseTicketWhenAvailableShouldBuy() {
-		Film FILM = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, 1, FILM_REMAINING_PREMIUM_TICKETS_1);
-		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(FILM);
-		User USER = new User(USER_ID, USERNAME); 
-		when(userRepository.getUserByUsername(USERNAME)).thenReturn(USER);
+		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, 1, FILM_REMAINING_PREMIUM_TICKETS_1);
+		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
+		User user = new User(USER_ID, USERNAME); 
+		when(userRepository.getUserByUsername(USERNAME)).thenReturn(user);
 		
 		assertThatNoException().isThrownBy(() -> filmController.buyBaseTicket(FILM_ID_1, USERNAME));
 		
