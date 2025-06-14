@@ -11,7 +11,7 @@ jobs:
       matrix:
         include:
           - java: 8
-            additional-maven-args: "coveralls:report"
+            additional-maven-args: "-Pcoveralls"
           - java: 17
             additional-maven-args: "-DskipCoverage"
   
