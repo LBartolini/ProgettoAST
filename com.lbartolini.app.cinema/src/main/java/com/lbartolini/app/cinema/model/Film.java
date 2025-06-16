@@ -1,5 +1,6 @@
 package com.lbartolini.app.cinema.model;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Film {
@@ -8,17 +9,17 @@ public class Film {
 	private String name;
 	private String room;
 	private String datetime;
-	private int baseTicketsRemaining;
-	private int premiumTicketsRemaining;
+	private int baseTicketsTotal;
+	private int premiumTicketsTotal;
 	
-	public Film(String id, String name, String room, String datetime, int baseTicketsRemaining, int premiumTicketsRemaining) {
+	public Film(String id, String name, String room, String datetime, int baseTicketsTotal, int premiumTicketsTotal) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.room = room;
 		this.datetime = datetime;
-		this.baseTicketsRemaining = baseTicketsRemaining;
-		this.premiumTicketsRemaining = premiumTicketsRemaining;
+		this.baseTicketsTotal = baseTicketsTotal;
+		this.premiumTicketsTotal = premiumTicketsTotal;
 	}
 
 	public String getId() {
@@ -37,12 +38,12 @@ public class Film {
 		return datetime;
 	}
 
-	public int getBaseTicketsRemaining() {
-		return baseTicketsRemaining;
+	public int getBaseTicketsTotal() {
+		return baseTicketsTotal;
 	}
 
-	public int getPremiumTicketsRemaining() {
-		return premiumTicketsRemaining;
+	public int getPremiumTicketsTotal() {
+		return premiumTicketsTotal;
 	}
 
 	@Override
@@ -66,8 +67,8 @@ public class Film {
 	@Override
 	public String toString() {
 		return "FilmProjection [id=" + id + ", name=" + name + ", room=" + room + ", datetime=" + datetime
-				+ ", baseTicketsRemaining=" + baseTicketsRemaining + ", premiumTicketsRemaining="
-				+ premiumTicketsRemaining + "]";
+				+ ", baseTicketsTotal=" + baseTicketsTotal + ", premiumTicketsTotal="
+				+ premiumTicketsTotal + "]";
 	}
 
 }

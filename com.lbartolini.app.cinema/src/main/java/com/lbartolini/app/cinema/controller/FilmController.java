@@ -23,7 +23,7 @@ public class FilmController {
 	}
 
 	public void buyBaseTicket(String filmId, String username) throws NoTicketsAvailableException {
-		int ticketsRemaining = filmRepository.getFilm(filmId).getBaseTicketsRemaining();
+		int ticketsRemaining = filmRepository.getFilm(filmId).getBaseTicketsTotal();
 		
 		if (ticketsRemaining <= 0) {
 			cinemaView.showError("No Base Tickets available");

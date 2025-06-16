@@ -65,6 +65,7 @@ public class UserRepositoryTest {
 	@Test
 	public void testGetTicketsWhenNoFilmIsPresent() {
 		insertUserInDB(USERNAME_1);
+		
 		assertThat(userRepository.getTickets(USERNAME_1)).isEmpty();
 	}
 	
