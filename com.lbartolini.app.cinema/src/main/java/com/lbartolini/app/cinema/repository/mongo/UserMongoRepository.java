@@ -1,11 +1,14 @@
 package com.lbartolini.app.cinema.repository.mongo;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.bson.Document;
 
+import com.lbartolini.app.cinema.model.Film;
 import com.lbartolini.app.cinema.model.Ticket;
+import com.lbartolini.app.cinema.model.TicketType;
 import com.lbartolini.app.cinema.model.User;
 import com.lbartolini.app.cinema.repository.UserRepository;
 import com.mongodb.MongoClient;
@@ -15,9 +18,11 @@ import com.mongodb.client.model.Filters;
 public class UserMongoRepository implements UserRepository {
 	
 	private MongoCollection<Document> userCollection;
+	private MongoCollection<Document> filmCollection;
 
-	public UserMongoRepository(MongoClient mongoClient, String dbName, String collectionName) {
-		userCollection = mongoClient.getDatabase(dbName).getCollection(collectionName);
+	public UserMongoRepository(MongoClient mongoClient, String dbName, String userCollectionName, String filmCollectionName) {
+		userCollection = mongoClient.getDatabase(dbName).getCollection(userCollectionName);
+		filmCollection = mongoClient.getDatabase(dbName).getCollection(filmCollectionName);
 	}
 
 	@Override
@@ -29,7 +34,39 @@ public class UserMongoRepository implements UserRepository {
 
 	@Override
 	public List<Ticket> getTickets(String username) {
-		return Collections.emptyList();
+		List<Ticket> tickets = StreamSupport
+			.stream(filmCollection.find(Filters.elemMatch("baseTickets", Filters.eq("username", username))).spliterator(), false)
+			.map((Document d) -> {
+				Film film = new Film(
+						d.getString("id"), 
+						d.getString("name"), 
+						d.getString("room"),
+						d.getString("datetime"),
+						d.getInteger("baseTicketsTotal", 0),
+						d.getInteger("premiumTicketsTotal", 0));
+				User user = new User(username);
+				return new Ticket(film, user, TicketType.BASE, 1);
+			})
+			.collect(Collectors.toList());
+		
+		List<Ticket> premiumTickets = StreamSupport
+				.stream(filmCollection.find(Filters.elemMatch("premiumTickets", Filters.eq("username", username))).spliterator(), false)
+				.map((Document d) -> {
+					Film film = new Film(
+							d.getString("id"), 
+							d.getString("name"), 
+							d.getString("room"),
+							d.getString("datetime"),
+							d.getInteger("baseTicketsTotal", 0),
+							d.getInteger("premiumTicketsTotal", 0));
+					User user = new User(username);
+					return new Ticket(film, user, TicketType.PREMIUM, 1);
+				})
+				.collect(Collectors.toList());
+		
+		tickets.addAll(premiumTickets);
+		
+		return tickets;
 	}
 
 }
