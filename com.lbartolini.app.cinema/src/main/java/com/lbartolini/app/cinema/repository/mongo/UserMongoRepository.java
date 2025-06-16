@@ -1,5 +1,6 @@
 package com.lbartolini.app.cinema.repository.mongo;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.bson.Document;
@@ -27,9 +28,9 @@ public class UserMongoRepository implements UserRepository {
 	}
 
 	@Override
-	public List<Ticket> getTickets(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Ticket> getTickets(String username) {
+		if (getUser(username) == null) return null;
+		return Collections.emptyList();
 	}
 
 }

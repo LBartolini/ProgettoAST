@@ -57,6 +57,17 @@ public class UserRepositoryTest {
 		assertThat(userRepository.getUser(USERNAME_2)).isEqualTo(new User(USERNAME_2));	
 	}
 	
+	@Test
+	public void testGetTicketsWhenUserNotPresent() {
+		assertThat(userRepository.getTickets(USERNAME_1)).isNull();
+	}
+	
+	@Test
+	public void testGetTicketsWhenNoFilmIsPresent() {
+		insertUserInDB(USERNAME_1);
+		assertThat(userRepository.getTickets(USERNAME_1)).isEmpty();
+	}
+	
 	private void insertUserInDB(String username) {
 		userCollection.insertOne(new Document().append("username", username));
 	}
