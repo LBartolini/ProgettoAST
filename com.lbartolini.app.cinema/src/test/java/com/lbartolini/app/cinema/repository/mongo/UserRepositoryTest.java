@@ -59,12 +59,13 @@ public class UserRepositoryTest {
 	
 	@Test
 	public void testGetTicketsWhenUserNotPresent() {
-		assertThat(userRepository.getTickets(USERNAME_1)).isNull();
+		assertThat(userRepository.getTickets(USERNAME_1)).isEmpty();
 	}
 	
 	@Test
 	public void testGetTicketsWhenNoFilmIsPresent() {
 		insertUserInDB(USERNAME_1);
+		
 		assertThat(userRepository.getTickets(USERNAME_1)).isEmpty();
 	}
 	

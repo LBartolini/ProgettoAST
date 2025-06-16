@@ -29,7 +29,6 @@ public class UserMongoRepository implements UserRepository {
 
 	@Override
 	public List<Ticket> getTickets(String username) {
-		if (getUser(username) == null) return null;
 		return Collections.emptyList();
 	}
 
