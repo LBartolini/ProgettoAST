@@ -24,6 +24,9 @@
     <sonar.coverage.exclusions>
       **/model/*.*
     </sonar.coverage.exclusions>
+    <sonar.junit.reportPaths>
+      ${project.build.directory}/surefire-reports
+    </sonar.junit.reportPaths>
   </properties>
 
   <dependencies>
