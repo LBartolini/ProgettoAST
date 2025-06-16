@@ -65,7 +65,7 @@ public class Film {
 
 	@Override
 	public String toString() {
-		return "FilmProjection [id=" + id + ", name=" + name + ", room=" + room + ", datetime=" + datetime
+		return "Film [id=" + id + ", name=" + name + ", room=" + room + ", datetime=" + datetime
 				+ ", baseTicketsTotal=" + baseTicketsTotal + ", premiumTicketsTotal="
 				+ premiumTicketsTotal + "]";
 	}

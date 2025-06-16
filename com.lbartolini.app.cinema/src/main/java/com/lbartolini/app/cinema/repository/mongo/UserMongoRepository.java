@@ -1,8 +1,8 @@
 package com.lbartolini.app.cinema.repository.mongo;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -37,13 +37,8 @@ public class UserMongoRepository implements UserRepository {
 	@Override
 	public List<Ticket> getTickets(String username) {
 		List<Ticket> tickets = StreamSupport
-			.stream(filmCollection.find(Filters.elemMatch("baseTickets", Filters.eq("username", username))).spliterator(), false)
-			.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-			.entrySet()
-			.stream()
-			.map((Map.Entry<Document, Long> e) -> {
-				Document d = e.getKey();
-				int occurencies = e.getValue().intValue();
+			.stream(filmCollection.find(Filters.eq("baseTickets", username)).spliterator(), false)
+			.map((Document d) -> {
 				Film film = new Film(
 						d.getString("id"), 
 						d.getString("name"), 
@@ -52,18 +47,14 @@ public class UserMongoRepository implements UserRepository {
 						d.getInteger("baseTicketsTotal", 0),
 						d.getInteger("premiumTicketsTotal", 0));
 				User user = new User(username);
-				return new Ticket(film, user, TicketType.BASE, occurencies);
+				return new Ticket(film, user, TicketType.BASE, 
+						Collections.frequency(d.get("baseTickets", new ArrayList<String>().getClass()), username));
 			})
 			.collect(Collectors.toList());
 		
 		List<Ticket> premiumTickets = StreamSupport
-				.stream(filmCollection.find(Filters.elemMatch("premiumTickets", Filters.eq("username", username))).spliterator(), false)
-				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-				.entrySet()
-				.stream()
-				.map((Map.Entry<Document, Long> e) -> {
-					Document d = e.getKey();
-					int occurencies = e.getValue().intValue();
+				.stream(filmCollection.find(Filters.eq("premiumTickets", username)).spliterator(), false)
+				.map((Document d) -> {
 					Film film = new Film(
 							d.getString("id"), 
 							d.getString("name"), 
@@ -72,7 +63,8 @@ public class UserMongoRepository implements UserRepository {
 							d.getInteger("baseTicketsTotal", 0),
 							d.getInteger("premiumTicketsTotal", 0));
 					User user = new User(username);
-					return new Ticket(film, user, TicketType.PREMIUM, occurencies);
+					return new Ticket(film, user, TicketType.PREMIUM, 
+							Collections.frequency(d.get("premiumTickets", new ArrayList<String>().getClass()), username));
 				})
 				.collect(Collectors.toList());
 		
