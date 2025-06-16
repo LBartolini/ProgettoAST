@@ -7,10 +7,8 @@ import com.lbartolini.app.cinema.model.User;
 
 public interface UserRepository {
 
-	User getUserByUsername(String username);
-	
-	User getUserById(String userId);
+	User getUser(String username);
 
-	List<Ticket> getTickets(String userId);
+	List<Ticket> getTickets(String username);
 
 }

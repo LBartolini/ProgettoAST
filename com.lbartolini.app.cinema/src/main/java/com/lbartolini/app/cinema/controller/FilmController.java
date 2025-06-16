@@ -30,11 +30,11 @@ public class FilmController {
 			throw new NoTicketsAvailableException();
 		}
 		
-		User user = userRepository.getUserByUsername(username);
+		User user = userRepository.getUser(username);
 		
-		filmRepository.buyBaseTicket(filmId, user.getId());
+		filmRepository.buyBaseTicket(filmId, user.getUsername());
 		
-		cinemaView.showTickets(userRepository.getTickets(user.getId()));
+		cinemaView.showTickets(userRepository.getTickets(user.getUsername()));
 	}
 
 }

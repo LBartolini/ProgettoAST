@@ -29,7 +29,6 @@ import com.lbartolini.app.cinema.view.CinemaView;
 public class FilmControllerTest {
 	
 	private static final String USERNAME = "USERNAME_XYZ";
-	private static final String USER_ID = "ID_ABC";
 	
 	private static final int FILM_REMAINING_PREMIUM_TICKETS_1 = 10;
 	private static final int FILM_REMAINING_BASE_TICKETS_1 = 10;
@@ -90,7 +89,7 @@ public class FilmControllerTest {
 	}
 	
 	@Test
-	public void testBuyBaseTicketWhenNoTicketsAvailableShouldThrowError() {
+	public void testBuyBaseTicketWhenNoTicketsAvailable() {
 		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, 0, FILM_REMAINING_PREMIUM_TICKETS_1);
 		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
 		
@@ -103,19 +102,19 @@ public class FilmControllerTest {
 	}
 	
 	@Test
-	public void testBuyBaseTicketWhenAvailableShouldBuy() {
+	public void testBuyBaseTicketWhenAvailable() {
 		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, 1, FILM_REMAINING_PREMIUM_TICKETS_1);
 		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
-		User user = new User(USER_ID, USERNAME); 
-		when(userRepository.getUserByUsername(USERNAME)).thenReturn(user);
+		User user = new User(USERNAME); 
+		when(userRepository.getUser(USERNAME)).thenReturn(user);
 		
 		assertThatNoException().isThrownBy(() -> filmController.buyBaseTicket(FILM_ID_1, USERNAME));
 		
 		InOrder inOrder = inOrder(filmRepository, userRepository, cinemaView);
 		inOrder.verify(filmRepository).getFilm(FILM_ID_1);
-		inOrder.verify(userRepository).getUserByUsername(USERNAME);
-		inOrder.verify(filmRepository).buyBaseTicket(FILM_ID_1, USER_ID);
-		inOrder.verify(userRepository).getTickets(USER_ID);
+		inOrder.verify(userRepository).getUser(USERNAME);
+		inOrder.verify(filmRepository).buyBaseTicket(FILM_ID_1, USERNAME);
+		inOrder.verify(userRepository).getTickets(USERNAME);
 		inOrder.verify(cinemaView).showTickets(anyList());
 	}
 

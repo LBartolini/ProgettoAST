@@ -4,17 +4,11 @@ import java.util.Objects;
 
 public class User {
 
-	private String id;
 	private String username;
 	
-	public User(String id, String username) {
+	public User(String username) {
 		super();
-		this.id = id;
 		this.username = username;
-	}
-
-	public String getId() {
-		return id;
 	}
 
 	public String getUsername() {
@@ -23,7 +17,7 @@ public class User {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, username);
+		return Objects.hash(username);
 	}
 
 	@Override
@@ -35,12 +29,12 @@ public class User {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
-		return Objects.equals(id, other.id) && Objects.equals(username, other.username);
+		return Objects.equals(username, other.username);
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + "]";
+		return "User [username=" + username + "]";
 	}
 	
 }
