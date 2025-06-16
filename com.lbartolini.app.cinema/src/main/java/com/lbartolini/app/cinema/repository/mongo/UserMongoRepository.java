@@ -1,6 +1,5 @@
 package com.lbartolini.app.cinema.repository.mongo;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,7 +47,7 @@ public class UserMongoRepository implements UserRepository {
 						d.getInteger("premiumTicketsTotal", 0));
 				User user = new User(username);
 				return new Ticket(film, user, TicketType.BASE, 
-						Collections.frequency(d.get("baseTickets", new ArrayList<String>().getClass()), username));
+						Collections.frequency(d.get("baseTickets", List.class), username));
 			})
 			.collect(Collectors.toList());
 		
@@ -64,7 +63,7 @@ public class UserMongoRepository implements UserRepository {
 							d.getInteger("premiumTicketsTotal", 0));
 					User user = new User(username);
 					return new Ticket(film, user, TicketType.PREMIUM, 
-							Collections.frequency(d.get("premiumTickets", new ArrayList<String>().getClass()), username));
+							Collections.frequency(d.get("premiumTickets", List.class), username));
 				})
 				.collect(Collectors.toList());
 		
