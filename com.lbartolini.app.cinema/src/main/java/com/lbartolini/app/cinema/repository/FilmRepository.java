@@ -8,7 +8,7 @@ public interface FilmRepository {
 
 	List<Film> getAllFilms();
 
-	void buyBaseTicket(String filmId, String userId);
+	void buyBaseTicket(String filmId, String username);
 
 	Film getFilm(String filmId);
 }
