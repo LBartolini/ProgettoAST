@@ -16,28 +16,28 @@ import org.mockito.MockitoAnnotations;
 import com.lbartolini.app.cinema.model.Film;
 import com.lbartolini.app.cinema.repository.FilmRepository;
 
-public class BuyBaseTicketHelperTest {
-
+public class BuyPremiumTicketHelperTest {
+	
 	private static final String USERNAME = "USERNAME";
 	
 	private static final String FILM_DATETIME = "25/06/2025 18:45";
 	private static final String FILM_ROOM = "Room X";
 	private static final String FILM_ID = "ABC123";
 	private static final String FILM_NAME = "Film A";
-	private static final int FILM_TOTAL_PREMIUM_TICKETS = 10;
+	private static final int FILM_TOTAL_BASE_TICKETS = 10;
 
 	@Mock
 	public FilmRepository filmRepository;
 	
 	@InjectMocks
-	public BuyBaseTicketHelper buyPremiumTicketHelper;
+	public BuyPremiumTicketHelper buyPremiumTicketHelper;
 	
 	private AutoCloseable closeable;
 
 	@Before
 	public void setUp() {
 		closeable = MockitoAnnotations.openMocks(this);
-		buyPremiumTicketHelper = new BuyBaseTicketHelper(filmRepository);
+		buyPremiumTicketHelper = new BuyPremiumTicketHelper(filmRepository);
 	}
 
 	@After
@@ -49,7 +49,7 @@ public class BuyBaseTicketHelperTest {
 	public void testBuyBaseTicket() {
 		buyPremiumTicketHelper.buyTicket(FILM_ID, USERNAME);
 		
-		verify(filmRepository).buyBaseTicket(FILM_ID, USERNAME);
+		verify(filmRepository).buyPremiumTicket(FILM_ID, USERNAME);
 	}
 	
 	@Test
@@ -63,9 +63,9 @@ public class BuyBaseTicketHelperTest {
 	
 	@Test
 	public void testGetRemainingTicketsWhenOneIsLeft() {
-		int baseTicketsTotal = 1;
+		int premiumTicketsTotal = 1;
 		int expectedRemainingTickets = 1;
-		Film film = new Film(FILM_ID, FILM_NAME, FILM_ROOM, FILM_DATETIME, baseTicketsTotal, FILM_TOTAL_PREMIUM_TICKETS, Collections.emptyList(), Collections.emptyList());
+		Film film = new Film(FILM_ID, FILM_NAME, FILM_ROOM, FILM_DATETIME, FILM_TOTAL_BASE_TICKETS, premiumTicketsTotal, Collections.emptyList(), Collections.emptyList());
 		when(filmRepository.getFilm(FILM_ID)).thenReturn(film);
 		
 		assertThat(buyPremiumTicketHelper.getRemainingTickets(FILM_ID)).isEqualTo(expectedRemainingTickets);
@@ -75,9 +75,9 @@ public class BuyBaseTicketHelperTest {
 	
 	@Test
 	public void testGetRemainingTicketsWhenSomeAreLeft() {
-		int baseTicketsTotal = 5;
-		int expectedRemainingTickets = 2;
-		Film film = new Film(FILM_ID, FILM_NAME, FILM_ROOM, FILM_DATETIME, baseTicketsTotal, FILM_TOTAL_PREMIUM_TICKETS, Collections.nCopies(baseTicketsTotal-expectedRemainingTickets, "SOME_USER"), Collections.emptyList());
+		int premiumTicketsTotal = 7;
+		int expectedRemainingTickets = 4;
+		Film film = new Film(FILM_ID, FILM_NAME, FILM_ROOM, FILM_DATETIME, FILM_TOTAL_BASE_TICKETS, premiumTicketsTotal, Collections.emptyList(), Collections.nCopies(premiumTicketsTotal-expectedRemainingTickets, "SOME_USER"));
 		when(filmRepository.getFilm(FILM_ID)).thenReturn(film);
 		
 		assertThat(buyPremiumTicketHelper.getRemainingTickets(FILM_ID)).isEqualTo(expectedRemainingTickets);
