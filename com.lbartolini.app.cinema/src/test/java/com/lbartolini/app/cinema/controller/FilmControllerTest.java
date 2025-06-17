@@ -30,19 +30,20 @@ public class FilmControllerTest {
 	
 	private static final String USERNAME = "USERNAME_XYZ";
 	
-	private static final int FILM_REMAINING_PREMIUM_TICKETS_1 = 10;
-	private static final int FILM_REMAINING_BASE_TICKETS_1 = 10;
+
 	private static final String FILM_DATETIME_1 = "25/06/2025 18:45";
 	private static final String FILM_ROOM_1 = "Room X";
 	private static final String FILM_ID_1 = "ABC123";
 	private static final String FILM_NAME_1 = "Film A";
+	private static final int FILM_TOTAL_PREMIUM_TICKETS_1 = 10;
+	private static final int FILM_TOTAL_BASE_TICKETS_1 = 10;
 
 	private static final String FILM_ID_2 = "XYZ456";
 	private static final String FILM_NAME_2 = "Film B";
 	private static final String FILM_ROOM_2 = "Room Y";
 	private static final String FILM_DATETIME_2 = "28/07/2025 21:00";
-	private static final int FILM_REMAINING_BASE_TICKETS_2 = 10;
-	private static final int FILM_REMAINING_PREMIUM_TICKETS_2 = 10;
+	private static final int FILM_TOTAL_BASE_TICKETS_2 = 10;
+	private static final int FILM_TOTAL_PREMIUM_TICKETS_2 = 10;
 
 	@InjectMocks
 	private FilmController filmController;
@@ -79,8 +80,8 @@ public class FilmControllerTest {
 	
 	@Test
 	public void testGetAllFilmsWhenSomeArePresent() {
-		List<Film> films = Arrays.asList(new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, FILM_REMAINING_BASE_TICKETS_1, FILM_REMAINING_PREMIUM_TICKETS_1),
-				new Film(FILM_ID_2, FILM_NAME_2, FILM_ROOM_2, FILM_DATETIME_2, FILM_REMAINING_BASE_TICKETS_2, FILM_REMAINING_PREMIUM_TICKETS_2));
+		List<Film> films = Arrays.asList(new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, FILM_TOTAL_BASE_TICKETS_1, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.emptyList(), Collections.emptyList()),
+				new Film(FILM_ID_2, FILM_NAME_2, FILM_ROOM_2, FILM_DATETIME_2, FILM_TOTAL_BASE_TICKETS_2, FILM_TOTAL_PREMIUM_TICKETS_2, Collections.emptyList(), Collections.emptyList()));
 		when(filmRepository.getAllFilms()).thenReturn(films);
 		
 		filmController.getAllFilms();
@@ -90,7 +91,8 @@ public class FilmControllerTest {
 	
 	@Test
 	public void testBuyBaseTicketWhenNoTicketsAvailable() {
-		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, 0, FILM_REMAINING_PREMIUM_TICKETS_1);
+		int baseTicketsTotal = 2;
+		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, baseTicketsTotal, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.nCopies(baseTicketsTotal, "username"), Collections.emptyList());
 		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
 		
 		assertThrows(NoTicketsAvailableException.class, () -> filmController.buyBaseTicket(FILM_ID_1, USERNAME));
@@ -103,7 +105,8 @@ public class FilmControllerTest {
 	
 	@Test
 	public void testBuyBaseTicketWhenAvailable() {
-		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, 1, FILM_REMAINING_PREMIUM_TICKETS_1);
+		int baseTicketsTotal = 3;
+		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, baseTicketsTotal, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.nCopies(2, "username"), Collections.emptyList());
 		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
 		User user = new User(USERNAME); 
 		when(userRepository.getUser(USERNAME)).thenReturn(user);
