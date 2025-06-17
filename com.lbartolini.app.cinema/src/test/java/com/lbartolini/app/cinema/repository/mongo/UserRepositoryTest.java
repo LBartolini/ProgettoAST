@@ -14,7 +14,6 @@ import org.testcontainers.containers.MongoDBContainer;
 
 import com.lbartolini.app.cinema.model.Film;
 import com.lbartolini.app.cinema.model.Ticket;
-import com.lbartolini.app.cinema.model.TicketType;
 import com.lbartolini.app.cinema.model.User;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
@@ -79,7 +78,7 @@ public class UserRepositoryTest {
 	}
 	
 	@Test
-	public void testGetTicketsWhenOneBaseAndOnePremiumArePresentInOneFilm() {
+	public void testGetTicketsWhenBaseAndPremiumArePresentInOneFilm() {
 		User user = new User(USERNAME_1);
 		insertUserInDB(user);
 		
@@ -92,10 +91,7 @@ public class UserRepositoryTest {
 		insertFilmInDB(film);
 		
 		assertThat(userRepository.getTickets(USERNAME_1))
-			.containsExactlyInAnyOrder(
-				new Ticket(film, user, TicketType.BASE, 1),
-				new Ticket(film, user, TicketType.PREMIUM, 1)
-				);
+			.containsExactly(new Ticket(film, user, 1, 1));
 	}
 	
 	@Test
@@ -127,9 +123,8 @@ public class UserRepositoryTest {
 		
 		assertThat(userRepository.getTickets(USERNAME_2))
 			.containsExactlyInAnyOrder(
-					new Ticket(film1, user2, TicketType.BASE, 2),
-					new Ticket(film2, user2, TicketType.BASE, 1),
-					new Ticket(film2, user2, TicketType.PREMIUM, 2));
+					new Ticket(film1, user2, 2, 0),
+					new Ticket(film2, user2, 1, 2));
 	}
 	
 	private void insertUserInDB(User user) {
