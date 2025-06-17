@@ -23,7 +23,7 @@ public class FilmController {
 		cinemaView.showAllFilms(filmRepository.getAllFilms());
 	}
 
-	public void buyBaseTicket(String filmId, String username) throws NoTicketsAvailableException {
+	public void buyBaseTicket(String filmId, String username) throws NoTicketsAvailableException, UserNotRegisteredException {
 		Film film = filmRepository.getFilm(filmId);
 		int ticketsRemaining = film.getBaseTicketsTotal()-film.getBaseTickets().size();
 		
@@ -33,6 +33,11 @@ public class FilmController {
 		}
 		
 		User user = userRepository.getUser(username);
+		
+		if (user == null) {
+			cinemaView.showError("User not registered");
+			throw new UserNotRegisteredException();
+		}
 		
 		filmRepository.buyBaseTicket(filmId, user.getUsername());
 		

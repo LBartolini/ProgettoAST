@@ -30,7 +30,6 @@ public class FilmControllerTest {
 	
 	private static final String USERNAME = "USERNAME_XYZ";
 	
-
 	private static final String FILM_DATETIME_1 = "25/06/2025 18:45";
 	private static final String FILM_ROOM_1 = "Room X";
 	private static final String FILM_ID_1 = "ABC123";
@@ -92,7 +91,7 @@ public class FilmControllerTest {
 	@Test
 	public void testBuyBaseTicketWhenNoTicketsAvailable() {
 		int baseTicketsTotal = 2;
-		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, baseTicketsTotal, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.nCopies(baseTicketsTotal, "username"), Collections.emptyList());
+		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, baseTicketsTotal, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.nCopies(baseTicketsTotal, "OTHER_USER"), Collections.emptyList());
 		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
 		
 		assertThrows(NoTicketsAvailableException.class, () -> filmController.buyBaseTicket(FILM_ID_1, USERNAME));
@@ -104,9 +103,24 @@ public class FilmControllerTest {
 	}
 	
 	@Test
-	public void testBuyBaseTicketWhenAvailable() {
+	public void testBuyBaseTicketWhenUserNotPresent() {
+		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, FILM_TOTAL_BASE_TICKETS_1, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.emptyList(), Collections.emptyList());
+		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
+		when(userRepository.getUser(USERNAME)).thenReturn(null);
+		
+		assertThrows(UserNotRegisteredException.class, () -> filmController.buyBaseTicket(FILM_ID_1, USERNAME));
+		
+		InOrder inOrder = inOrder(filmRepository, userRepository, cinemaView);
+		inOrder.verify(filmRepository).getFilm(FILM_ID_1);
+		inOrder.verify(userRepository).getUser(USERNAME);
+		inOrder.verify(cinemaView).showError("User not registered");
+		inOrder.verifyNoMoreInteractions();
+	}
+	
+	@Test
+	public void testBuyBaseTicketOneIsAvailable() {
 		int baseTicketsTotal = 3;
-		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, baseTicketsTotal, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.nCopies(2, "username"), Collections.emptyList());
+		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, baseTicketsTotal, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.nCopies(2, "OTHER_USER"), Collections.emptyList());
 		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
 		User user = new User(USERNAME); 
 		when(userRepository.getUser(USERNAME)).thenReturn(user);
