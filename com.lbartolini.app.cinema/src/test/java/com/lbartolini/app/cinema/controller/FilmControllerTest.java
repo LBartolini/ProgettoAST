@@ -91,8 +91,8 @@ public class FilmControllerTest {
 	
 	@Test
 	public void testBuyBaseTicketWhenNoTicketsAvailable() {
-		int baseTicketsTotal = 0;
-		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, baseTicketsTotal, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.emptyList(), Collections.emptyList());
+		int baseTicketsTotal = 2;
+		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, baseTicketsTotal, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.nCopies(baseTicketsTotal, "username"), Collections.emptyList());
 		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
 		
 		assertThrows(NoTicketsAvailableException.class, () -> filmController.buyBaseTicket(FILM_ID_1, USERNAME));
@@ -105,8 +105,8 @@ public class FilmControllerTest {
 	
 	@Test
 	public void testBuyBaseTicketWhenAvailable() {
-		int baseTicketsTotal = 1;
-		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, baseTicketsTotal, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.emptyList(), Collections.emptyList());
+		int baseTicketsTotal = 3;
+		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, baseTicketsTotal, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.nCopies(2, "username"), Collections.emptyList());
 		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
 		User user = new User(USERNAME); 
 		when(userRepository.getUser(USERNAME)).thenReturn(user);

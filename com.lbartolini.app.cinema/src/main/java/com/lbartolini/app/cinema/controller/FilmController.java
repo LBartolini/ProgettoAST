@@ -1,5 +1,6 @@
 package com.lbartolini.app.cinema.controller;
 
+import com.lbartolini.app.cinema.model.Film;
 import com.lbartolini.app.cinema.model.User;
 import com.lbartolini.app.cinema.repository.FilmRepository;
 import com.lbartolini.app.cinema.repository.UserRepository;
@@ -23,7 +24,8 @@ public class FilmController {
 	}
 
 	public void buyBaseTicket(String filmId, String username) throws NoTicketsAvailableException {
-		int ticketsRemaining = filmRepository.getFilm(filmId).getBaseTicketsTotal();
+		Film film = filmRepository.getFilm(filmId);
+		int ticketsRemaining = film.getBaseTicketsTotal()-film.getBaseTickets().size();
 		
 		if (ticketsRemaining <= 0) {
 			cinemaView.showError("No Base Tickets available");
