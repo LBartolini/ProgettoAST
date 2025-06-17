@@ -120,7 +120,7 @@ public class FilmControllerTest {
 	@Test
 	public void testBuyBaseTicketOneIsAvailable() {
 		int baseTicketsTotal = 3;
-		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, baseTicketsTotal, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.nCopies(2, "OTHER_USER"), Collections.emptyList());
+		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, baseTicketsTotal, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.nCopies(baseTicketsTotal-1, "OTHER_USER"), Collections.emptyList());
 		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
 		User user = new User(USERNAME); 
 		when(userRepository.getUser(USERNAME)).thenReturn(user);
@@ -131,6 +131,89 @@ public class FilmControllerTest {
 		inOrder.verify(filmRepository).getFilm(FILM_ID_1);
 		inOrder.verify(userRepository).getUser(USERNAME);
 		inOrder.verify(filmRepository).buyBaseTicket(FILM_ID_1, USERNAME);
+		inOrder.verify(userRepository).getTickets(USERNAME);
+		inOrder.verify(cinemaView).showTickets(anyList());
+	}
+	
+	@Test
+	public void testBuyBaseTicketMultipleAvailable() {
+		int baseTicketsTotal = 4;
+		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, baseTicketsTotal, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.nCopies(baseTicketsTotal-2, "OTHER_USER"), Collections.emptyList());
+		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
+		User user = new User(USERNAME); 
+		when(userRepository.getUser(USERNAME)).thenReturn(user);
+		
+		assertThatNoException().isThrownBy(() -> filmController.buyBaseTicket(FILM_ID_1, USERNAME));
+		
+		InOrder inOrder = inOrder(filmRepository, userRepository, cinemaView);
+		inOrder.verify(filmRepository).getFilm(FILM_ID_1);
+		inOrder.verify(userRepository).getUser(USERNAME);
+		inOrder.verify(filmRepository).buyBaseTicket(FILM_ID_1, USERNAME);
+		inOrder.verify(userRepository).getTickets(USERNAME);
+		inOrder.verify(cinemaView).showTickets(anyList());
+	}
+	
+	@Test
+	public void testBuyPremiumTicketWhenNoTicketsAvailable() {
+		int premiumticketsTotal = 4;
+		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, FILM_TOTAL_BASE_TICKETS_1, premiumticketsTotal, Collections.emptyList(), Collections.nCopies(premiumticketsTotal, "OTHER_USER"));
+		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
+		
+		assertThrows(NoTicketsAvailableException.class, () -> filmController.buyPremiumTicket(FILM_ID_1, USERNAME));
+		
+		verify(filmRepository).getFilm(FILM_ID_1);
+		verify(cinemaView).showError("No Premium Tickets available");
+		verifyNoMoreInteractions(filmRepository);
+		verifyNoMoreInteractions(cinemaView);
+	}
+	
+	@Test
+	public void testBuyPremiumTicketWhenUserNotPresent() {
+		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, FILM_TOTAL_BASE_TICKETS_1, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.emptyList(), Collections.emptyList());
+		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
+		when(userRepository.getUser(USERNAME)).thenReturn(null);
+		
+		assertThrows(UserNotRegisteredException.class, () -> filmController.buyPremiumTicket(FILM_ID_1, USERNAME));
+		
+		InOrder inOrder = inOrder(filmRepository, userRepository, cinemaView);
+		inOrder.verify(filmRepository).getFilm(FILM_ID_1);
+		inOrder.verify(userRepository).getUser(USERNAME);
+		inOrder.verify(cinemaView).showError("User not registered");
+		inOrder.verifyNoMoreInteractions();
+	}
+	
+	@Test
+	public void testBuyPremiumTicketOneIsAvailable() {
+		int premiumTicketsTotal = 3;
+		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, FILM_TOTAL_BASE_TICKETS_1, premiumTicketsTotal, Collections.emptyList(), Collections.nCopies(premiumTicketsTotal-1, "OTHER_USER"));
+		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
+		User user = new User(USERNAME); 
+		when(userRepository.getUser(USERNAME)).thenReturn(user);
+		
+		assertThatNoException().isThrownBy(() -> filmController.buyPremiumTicket(FILM_ID_1, USERNAME));
+		
+		InOrder inOrder = inOrder(filmRepository, userRepository, cinemaView);
+		inOrder.verify(filmRepository).getFilm(FILM_ID_1);
+		inOrder.verify(userRepository).getUser(USERNAME);
+		inOrder.verify(filmRepository).buyPremiumTicket(FILM_ID_1, USERNAME);
+		inOrder.verify(userRepository).getTickets(USERNAME);
+		inOrder.verify(cinemaView).showTickets(anyList());
+	}
+	
+	@Test
+	public void testBuyPremiumTicketMultipleAvailable() {
+		int premiumTicketsTotal = 5;
+		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, FILM_TOTAL_BASE_TICKETS_1, premiumTicketsTotal, Collections.emptyList(), Collections.nCopies(premiumTicketsTotal-3, "OTHER_USER"));
+		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
+		User user = new User(USERNAME); 
+		when(userRepository.getUser(USERNAME)).thenReturn(user);
+		
+		assertThatNoException().isThrownBy(() -> filmController.buyPremiumTicket(FILM_ID_1, USERNAME));
+		
+		InOrder inOrder = inOrder(filmRepository, userRepository, cinemaView);
+		inOrder.verify(filmRepository).getFilm(FILM_ID_1);
+		inOrder.verify(userRepository).getUser(USERNAME);
+		inOrder.verify(filmRepository).buyPremiumTicket(FILM_ID_1, USERNAME);
 		inOrder.verify(userRepository).getTickets(USERNAME);
 		inOrder.verify(cinemaView).showTickets(anyList());
 	}

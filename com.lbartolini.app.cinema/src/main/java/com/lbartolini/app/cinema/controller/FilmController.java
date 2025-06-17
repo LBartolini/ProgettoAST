@@ -44,4 +44,25 @@ public class FilmController {
 		cinemaView.showTickets(userRepository.getTickets(user.getUsername()));
 	}
 
+	public void buyPremiumTicket(String filmId, String username) throws NoTicketsAvailableException, UserNotRegisteredException {
+		Film film = filmRepository.getFilm(filmId);
+		int ticketsRemaining = film.getPremiumTicketsTotal()-film.getPremiumTickets().size();
+		
+		if (ticketsRemaining <= 0) {
+			cinemaView.showError("No Premium Tickets available");
+			throw new NoTicketsAvailableException();
+		}
+		
+		User user = userRepository.getUser(username);
+		
+		if (user == null) {
+			cinemaView.showError("User not registered");
+			throw new UserNotRegisteredException();
+		}
+		
+		filmRepository.buyPremiumTicket(filmId, user.getUsername());
+		
+		cinemaView.showTickets(userRepository.getTickets(user.getUsername()));
+	}
+
 }
