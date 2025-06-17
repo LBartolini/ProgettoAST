@@ -6,15 +6,15 @@ public class Ticket {
 	
 	private Film film;
 	private User user;
-	private TicketType ticketType;
-	private int numberOfTickets;
+	private int baseTickets;
+	private int premiumTickets;
 	
-	public Ticket(Film film, User user, TicketType ticketType, int numberOfTickets) {
+	public Ticket(Film film, User user, int baseTickets, int premiumTickets) {
 		super();
 		this.film = film;
 		this.user = user;
-		this.ticketType = ticketType;
-		this.numberOfTickets = numberOfTickets;
+		this.baseTickets = baseTickets;
+		this.premiumTickets = premiumTickets;
 	}
 
 	public Film getFilm() {
@@ -24,19 +24,18 @@ public class Ticket {
 	public User getUser() {
 		return user;
 	}
-	
 
-	public TicketType getTicketType() {
-		return ticketType;
+	public int getBaseTickets() {
+		return baseTickets;
 	}
 
-	public int getNumberOfTickets() {
-		return numberOfTickets;
+	public int getPremiumTickets() {
+		return premiumTickets;
 	}
-	
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(film, numberOfTickets, ticketType, user);
+		return Objects.hash(baseTickets, film, premiumTickets, user);
 	}
 
 	@Override
@@ -48,14 +47,14 @@ public class Ticket {
 		if (getClass() != obj.getClass())
 			return false;
 		Ticket other = (Ticket) obj;
-		return Objects.equals(film, other.film) && numberOfTickets == other.numberOfTickets
-				&& ticketType == other.ticketType && Objects.equals(user, other.user);
+		return baseTickets == other.baseTickets && Objects.equals(film, other.film)
+				&& premiumTickets == other.premiumTickets && Objects.equals(user, other.user);
 	}
 
 	@Override
 	public String toString() {
-		return "Ticket [film=" + film + ", user=" + user + ", ticketType=" + ticketType + ", numberOfTickets="
-				+ numberOfTickets + "]";
+		return "Ticket [film=" + film + ", user=" + user + ", baseTickets=" + baseTickets + ", premiumTickets="
+				+ premiumTickets + "]";
 	}
-
+	
 }
