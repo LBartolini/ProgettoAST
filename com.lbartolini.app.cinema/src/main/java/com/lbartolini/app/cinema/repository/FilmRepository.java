@@ -10,5 +10,8 @@ public interface FilmRepository {
 
 	void buyBaseTicket(String filmId, String username);
 
+	void buyPremiumTicket(String filmId, String username);
+	
 	Film getFilm(String filmId);
+	
 }

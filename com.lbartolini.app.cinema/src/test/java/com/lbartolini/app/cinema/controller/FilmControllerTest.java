@@ -20,6 +20,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.lbartolini.app.cinema.controller.exceptions.NoTicketsAvailableException;
+import com.lbartolini.app.cinema.controller.exceptions.UserNotRegisteredException;
+import com.lbartolini.app.cinema.controller.helper.BuyTicketHelper;
 import com.lbartolini.app.cinema.model.Film;
 import com.lbartolini.app.cinema.model.User;
 import com.lbartolini.app.cinema.repository.FilmRepository;
@@ -30,7 +33,6 @@ public class FilmControllerTest {
 	
 	private static final String USERNAME = "USERNAME_XYZ";
 	
-
 	private static final String FILM_DATETIME_1 = "25/06/2025 18:45";
 	private static final String FILM_ROOM_1 = "Room X";
 	private static final String FILM_ID_1 = "ABC123";
@@ -52,6 +54,9 @@ public class FilmControllerTest {
 	
 	@Mock
 	private FilmRepository filmRepository;
+	
+	@Mock
+	private BuyTicketHelper buyHelper;
 
 	@Mock
 	private CinemaView cinemaView;
@@ -90,35 +95,61 @@ public class FilmControllerTest {
 	}
 	
 	@Test
-	public void testBuyBaseTicketWhenNoTicketsAvailable() {
-		int baseTicketsTotal = 2;
-		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, baseTicketsTotal, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.nCopies(baseTicketsTotal, "username"), Collections.emptyList());
-		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
+	public void testBuyTicketWhenNoTicketsAvailable() {
+		when(buyHelper.getRemainingTickets(FILM_ID_1)).thenReturn(0);
 		
-		assertThrows(NoTicketsAvailableException.class, () -> filmController.buyBaseTicket(FILM_ID_1, USERNAME));
+		assertThrows(NoTicketsAvailableException.class, () -> filmController.buyTicket(FILM_ID_1, USERNAME, buyHelper));
 		
-		verify(filmRepository).getFilm(FILM_ID_1);
+		verify(buyHelper).getRemainingTickets(FILM_ID_1);
 		verify(cinemaView).showError("No Base Tickets available");
-		verifyNoMoreInteractions(filmRepository);
+		verifyNoMoreInteractions(buyHelper);
 		verifyNoMoreInteractions(cinemaView);
 	}
 	
 	@Test
-	public void testBuyBaseTicketWhenAvailable() {
-		int baseTicketsTotal = 3;
-		Film film = new Film(FILM_ID_1, FILM_NAME_1, FILM_ROOM_1, FILM_DATETIME_1, baseTicketsTotal, FILM_TOTAL_PREMIUM_TICKETS_1, Collections.nCopies(2, "username"), Collections.emptyList());
-		when(filmRepository.getFilm(FILM_ID_1)).thenReturn(film);
+	public void testBuyTicketWhenUserNotPresent() {
+		when(buyHelper.getRemainingTickets(FILM_ID_1)).thenReturn(1);
+		when(userRepository.getUser(USERNAME)).thenReturn(null);
+		
+		assertThrows(UserNotRegisteredException.class, () -> filmController.buyTicket(FILM_ID_1, USERNAME, buyHelper));
+		
+		InOrder inOrder = inOrder(buyHelper, userRepository, cinemaView);
+		inOrder.verify(buyHelper).getRemainingTickets(FILM_ID_1);
+		inOrder.verify(userRepository).getUser(USERNAME);
+		inOrder.verify(cinemaView).showError("User not registered");
+		inOrder.verifyNoMoreInteractions();
+	}
+	
+	@Test
+	public void testBuyTicketOneIsAvailable() {
+		when(buyHelper.getRemainingTickets(FILM_ID_1)).thenReturn(1);
 		User user = new User(USERNAME); 
 		when(userRepository.getUser(USERNAME)).thenReturn(user);
 		
-		assertThatNoException().isThrownBy(() -> filmController.buyBaseTicket(FILM_ID_1, USERNAME));
+		assertThatNoException().isThrownBy(() -> filmController.buyTicket(FILM_ID_1, USERNAME, buyHelper));
 		
-		InOrder inOrder = inOrder(filmRepository, userRepository, cinemaView);
-		inOrder.verify(filmRepository).getFilm(FILM_ID_1);
+		InOrder inOrder = inOrder(buyHelper, userRepository, cinemaView);
+		inOrder.verify(buyHelper).getRemainingTickets(FILM_ID_1);
 		inOrder.verify(userRepository).getUser(USERNAME);
-		inOrder.verify(filmRepository).buyBaseTicket(FILM_ID_1, USERNAME);
+		inOrder.verify(buyHelper).buyTicket(FILM_ID_1, USERNAME);
 		inOrder.verify(userRepository).getTickets(USERNAME);
 		inOrder.verify(cinemaView).showTickets(anyList());
 	}
-
+	
+	@Test
+	public void testBuyTicketMultipleAvailable() {
+		when(buyHelper.getRemainingTickets(FILM_ID_1)).thenReturn(4);
+		User user = new User(USERNAME); 
+		when(userRepository.getUser(USERNAME)).thenReturn(user);
+		
+		assertThatNoException().isThrownBy(() -> filmController.buyTicket(FILM_ID_1, USERNAME, buyHelper));
+		
+		InOrder inOrder = inOrder(buyHelper, userRepository, cinemaView);
+		inOrder.verify(buyHelper).getRemainingTickets(FILM_ID_1);
+		inOrder.verify(userRepository).getUser(USERNAME);
+		inOrder.verify(buyHelper).buyTicket(FILM_ID_1, USERNAME);
+		inOrder.verify(userRepository).getTickets(USERNAME);
+		inOrder.verify(cinemaView).showTickets(anyList());
+	}
+	
 }
