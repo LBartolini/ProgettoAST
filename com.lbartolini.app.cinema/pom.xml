@@ -30,6 +30,24 @@
     <sonar.junit.reportPaths>
       ${project.build.directory}/surefire-reports
     </sonar.junit.reportPaths>
+    
+    <sonar.issue.ignore.multicriteria>e11, e12</sonar.issue.ignore.multicriteria>
+    
+    <!-- Constructor has too many parameters -->
+    <sonar.issue.ignore.multicriteria.e11.ruleKey>
+      java:S107
+    </sonar.issue.ignore.multicriteria.e11.ruleKey>
+    <sonar.issue.ignore.multicriteria.e11.resourceKey>
+      **/model/Film.java
+    </sonar.issue.ignore.multicriteria.e11.resourceKey>
+    
+    <!-- Duplicated literal -->
+    <sonar.issue.ignore.multicriteria.e12.ruleKey>
+      java:S1192
+    </sonar.issue.ignore.multicriteria.e12.ruleKey>
+    <sonar.issue.ignore.multicriteria.e12.resourceKey>
+      **/repository/mongo/UserMongoRepository.java
+    </sonar.issue.ignore.multicriteria.e12.resourceKey>
   </properties>
 
   <dependencies>
