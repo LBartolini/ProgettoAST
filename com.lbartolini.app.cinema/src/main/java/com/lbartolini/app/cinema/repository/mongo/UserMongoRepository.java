@@ -37,16 +37,12 @@ public class UserMongoRepository implements UserRepository {
 	public List<Ticket> getTickets(String username) {
 		List<Ticket> tickets = StreamSupport
 			.stream(filmCollection.find(Filters.eq("baseTickets", username)).spliterator(), false)
-			.map((Document d) -> {
-				return convertDocumentToTicket(username, d, TicketType.BASE);
-			})
+			.map((Document d) -> convertDocumentToTicket(username, d, TicketType.BASE))
 			.collect(Collectors.toList());
 		
 		List<Ticket> premiumTickets = StreamSupport
 				.stream(filmCollection.find(Filters.eq("premiumTickets", username)).spliterator(), false)
-				.map((Document d) -> {
-					return convertDocumentToTicket(username, d, TicketType.PREMIUM);
-				})
+				.map((Document d) -> convertDocumentToTicket(username, d, TicketType.PREMIUM))
 				.collect(Collectors.toList());
 		
 		tickets.addAll(premiumTickets);
