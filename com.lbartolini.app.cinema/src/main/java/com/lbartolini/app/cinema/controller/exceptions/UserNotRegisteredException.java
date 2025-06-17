@@ -1,4 +1,4 @@
-package com.lbartolini.app.cinema.controller;
+package com.lbartolini.app.cinema.controller.exceptions;
 
 public class UserNotRegisteredException extends Exception {
 

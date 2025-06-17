@@ -1,6 +1,8 @@
 package com.lbartolini.app.cinema.controller;
 
-import com.lbartolini.app.cinema.model.Film;
+import com.lbartolini.app.cinema.controller.exceptions.NoTicketsAvailableException;
+import com.lbartolini.app.cinema.controller.exceptions.UserNotRegisteredException;
+import com.lbartolini.app.cinema.controller.helper.BuyTicketHelper;
 import com.lbartolini.app.cinema.model.User;
 import com.lbartolini.app.cinema.repository.FilmRepository;
 import com.lbartolini.app.cinema.repository.UserRepository;
@@ -23,9 +25,9 @@ public class FilmController {
 		cinemaView.showAllFilms(filmRepository.getAllFilms());
 	}
 
-	public void buyBaseTicket(String filmId, String username) throws NoTicketsAvailableException, UserNotRegisteredException {
-		Film film = filmRepository.getFilm(filmId);
-		int ticketsRemaining = film.getBaseTicketsTotal()-film.getBaseTickets().size();
+	public void buyTicket(String filmId, String username, BuyTicketHelper buyHelper)
+			throws NoTicketsAvailableException, UserNotRegisteredException {
+		int ticketsRemaining = buyHelper.getRemainingTickets(filmId);
 		
 		if (ticketsRemaining <= 0) {
 			cinemaView.showError("No Base Tickets available");
@@ -39,28 +41,7 @@ public class FilmController {
 			throw new UserNotRegisteredException();
 		}
 		
-		filmRepository.buyBaseTicket(filmId, user.getUsername());
-		
-		cinemaView.showTickets(userRepository.getTickets(user.getUsername()));
-	}
-
-	public void buyPremiumTicket(String filmId, String username) throws NoTicketsAvailableException, UserNotRegisteredException {
-		Film film = filmRepository.getFilm(filmId);
-		int ticketsRemaining = film.getPremiumTicketsTotal()-film.getPremiumTickets().size();
-		
-		if (ticketsRemaining <= 0) {
-			cinemaView.showError("No Premium Tickets available");
-			throw new NoTicketsAvailableException();
-		}
-		
-		User user = userRepository.getUser(username);
-		
-		if (user == null) {
-			cinemaView.showError("User not registered");
-			throw new UserNotRegisteredException();
-		}
-		
-		filmRepository.buyPremiumTicket(filmId, user.getUsername());
+		buyHelper.buyTicket(filmId, user.getUsername());
 		
 		cinemaView.showTickets(userRepository.getTickets(user.getUsername()));
 	}
