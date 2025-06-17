@@ -38,42 +38,35 @@ public class UserMongoRepository implements UserRepository {
 		List<Ticket> tickets = StreamSupport
 			.stream(filmCollection.find(Filters.eq("baseTickets", username)).spliterator(), false)
 			.map((Document d) -> {
-				Film film = new Film(
-						d.getString("id"), 
-						d.getString("name"), 
-						d.getString("room"),
-						d.getString("datetime"),
-						d.getInteger("baseTicketsTotal", 0),
-						d.getInteger("premiumTicketsTotal", 0),
-						d.getList("baseTickets", String.class),
-						d.getList("premiumTickets", String.class));
-				User user = new User(username);
-				return new Ticket(film, user, TicketType.BASE, 
-						Collections.frequency(d.getList("baseTickets", String.class), username));
+				return convertDocumentToTicket(username, d, TicketType.BASE);
 			})
 			.collect(Collectors.toList());
 		
 		List<Ticket> premiumTickets = StreamSupport
 				.stream(filmCollection.find(Filters.eq("premiumTickets", username)).spliterator(), false)
 				.map((Document d) -> {
-					Film film = new Film(
-							d.getString("id"), 
-							d.getString("name"), 
-							d.getString("room"),
-							d.getString("datetime"),
-							d.getInteger("baseTicketsTotal", 0),
-							d.getInteger("premiumTicketsTotal", 0),
-							d.getList("baseTickets", String.class),
-							d.getList("premiumTickets", String.class));
-					User user = new User(username);
-					return new Ticket(film, user, TicketType.PREMIUM, 
-							Collections.frequency(d.getList("premiumTickets", String.class), username));
+					return convertDocumentToTicket(username, d, TicketType.PREMIUM);
 				})
 				.collect(Collectors.toList());
 		
 		tickets.addAll(premiumTickets);
 		
 		return tickets;
+	}
+
+	private Ticket convertDocumentToTicket(String username, Document d, TicketType ticketType) {
+		Film film = new Film(
+				d.getString("id"), 
+				d.getString("name"), 
+				d.getString("room"),
+				d.getString("datetime"),
+				d.getInteger("baseTicketsTotal", 0),
+				d.getInteger("premiumTicketsTotal", 0),
+				d.getList("baseTickets", String.class),
+				d.getList("premiumTickets", String.class));
+		User user = new User(username);
+		return new Ticket(film, user, ticketType, 
+				Collections.frequency(d.getList(ticketType.equals(TicketType.BASE) ? "baseTickets" : "premiumTickets", String.class), username));
 	}
 
 }
