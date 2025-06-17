@@ -44,10 +44,12 @@ public class UserMongoRepository implements UserRepository {
 						d.getString("room"),
 						d.getString("datetime"),
 						d.getInteger("baseTicketsTotal", 0),
-						d.getInteger("premiumTicketsTotal", 0));
+						d.getInteger("premiumTicketsTotal", 0),
+						d.getList("baseTickets", String.class),
+						d.getList("premiumTickets", String.class));
 				User user = new User(username);
 				return new Ticket(film, user, TicketType.BASE, 
-						Collections.frequency(d.get("baseTickets", List.class), username));
+						Collections.frequency(d.getList("baseTickets", String.class), username));
 			})
 			.collect(Collectors.toList());
 		
@@ -60,10 +62,12 @@ public class UserMongoRepository implements UserRepository {
 							d.getString("room"),
 							d.getString("datetime"),
 							d.getInteger("baseTicketsTotal", 0),
-							d.getInteger("premiumTicketsTotal", 0));
+							d.getInteger("premiumTicketsTotal", 0),
+							d.getList("baseTickets", String.class),
+							d.getList("premiumTickets", String.class));
 					User user = new User(username);
 					return new Ticket(film, user, TicketType.PREMIUM, 
-							Collections.frequency(d.get("premiumTickets", List.class), username));
+							Collections.frequency(d.getList("premiumTickets", String.class), username));
 				})
 				.collect(Collectors.toList());
 		

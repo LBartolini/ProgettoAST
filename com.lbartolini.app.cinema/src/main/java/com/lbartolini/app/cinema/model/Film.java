@@ -1,5 +1,6 @@
 package com.lbartolini.app.cinema.model;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Film {
@@ -10,8 +11,17 @@ public class Film {
 	private String datetime;
 	private int baseTicketsTotal;
 	private int premiumTicketsTotal;
+	private List<String> baseTickets;
+	private List<String> premiumTickets;
 	
-	public Film(String id, String name, String room, String datetime, int baseTicketsTotal, int premiumTicketsTotal) {
+	public Film(String id, 
+			String name, 
+			String room, 
+			String datetime, 
+			int baseTicketsTotal, 
+			int premiumTicketsTotal, 
+			List<String> baseTickets,
+			List<String> premiumTickets) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -19,6 +29,8 @@ public class Film {
 		this.datetime = datetime;
 		this.baseTicketsTotal = baseTicketsTotal;
 		this.premiumTicketsTotal = premiumTicketsTotal;
+		this.baseTickets = baseTickets;
+		this.premiumTickets = premiumTickets;
 	}
 
 	public String getId() {
@@ -43,6 +55,14 @@ public class Film {
 
 	public int getPremiumTicketsTotal() {
 		return premiumTicketsTotal;
+	}
+	
+	public List<String> getBaseTickets() {
+		return baseTickets;
+	}
+
+	public List<String> getPremiumTickets() {
+		return premiumTickets;
 	}
 
 	@Override

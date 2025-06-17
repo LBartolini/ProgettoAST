@@ -83,13 +83,13 @@ public class UserRepositoryTest {
 		User user = new User(USERNAME_1);
 		insertUserInDB(user);
 		
-		Film film = new Film("ID_1", "NAME_1", "ROOM_1", "DATETIME_1", 10, 10);
 		List<String> baseTickets = new ArrayList<String>();
 		baseTickets.add(USERNAME_2);
 		baseTickets.add(USERNAME_1);
 		List<String> premiumTickets = new ArrayList<String>();
 		premiumTickets.add(USERNAME_1);
-		insertFilmInDB(film, baseTickets, premiumTickets);
+		Film film = new Film("ID_1", "NAME_1", "ROOM_1", "DATETIME_1", 10, 10, baseTickets, premiumTickets);
+		insertFilmInDB(film);
 		
 		assertThat(userRepository.getTickets(USERNAME_1))
 			.containsExactlyInAnyOrder(
@@ -105,16 +105,15 @@ public class UserRepositoryTest {
 		User user2 = new User(USERNAME_2);
 		insertUserInDB(user2);
 		
-		Film film1 = new Film("ID_1", "NAME_1", "ROOM_1", "DATETIME_1", 10, 10);
 		List<String> baseTickets1 = new ArrayList<String>();
 		baseTickets1.add(USERNAME_1);
 		baseTickets1.add(USERNAME_2);
 		baseTickets1.add(USERNAME_2);
 		List<String> premiumTickets1 = new ArrayList<String>();
 		premiumTickets1.add(USERNAME_1);
-		insertFilmInDB(film1, baseTickets1, premiumTickets1);
+		Film film1 = new Film("ID_1", "NAME_1", "ROOM_1", "DATETIME_1", 10, 10, baseTickets1, premiumTickets1);
+		insertFilmInDB(film1);
 		
-		Film film2 = new Film("ID_2", "NAME_2", "ROOM_2", "DATETIME_2", 5, 5);
 		List<String> baseTickets2 = new ArrayList<String>();
 		baseTickets2.add(USERNAME_1);
 		baseTickets2.add(USERNAME_2);
@@ -123,7 +122,8 @@ public class UserRepositoryTest {
 		premiumTickets2.add(USERNAME_2);
 		premiumTickets2.add(USERNAME_2);
 		premiumTickets2.add(USERNAME_1);
-		insertFilmInDB(film2, baseTickets2, premiumTickets2);
+		Film film2 = new Film("ID_2", "NAME_2", "ROOM_2", "DATETIME_2", 5, 5, baseTickets2, premiumTickets2);
+		insertFilmInDB(film2);
 		
 		assertThat(userRepository.getTickets(USERNAME_2))
 			.containsExactlyInAnyOrder(
@@ -136,7 +136,7 @@ public class UserRepositoryTest {
 		userCollection.insertOne(new Document("username", user.getUsername()));
 	}
 	
-	private void insertFilmInDB(Film film, List<String> baseTickets, List<String> premiumTickets) {
+	private void insertFilmInDB(Film film) {
 		
 		filmCollection.insertOne(new Document()
 				.append("id", film.getId())
@@ -145,8 +145,8 @@ public class UserRepositoryTest {
 				.append("datetime", film.getDatetime())
 				.append("baseTicketsTotal", film.getBaseTicketsTotal())
 				.append("premiumTicketsTotal", film.getPremiumTicketsTotal())
-				.append("baseTickets", baseTickets)
-				.append("premiumTickets", premiumTickets)
+				.append("baseTickets", film.getBaseTickets())
+				.append("premiumTickets", film.getPremiumTickets())
 				);
 	}
 
