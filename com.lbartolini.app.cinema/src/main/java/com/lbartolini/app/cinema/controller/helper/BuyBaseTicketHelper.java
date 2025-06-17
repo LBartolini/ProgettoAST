@@ -1,5 +1,6 @@
 package com.lbartolini.app.cinema.controller.helper;
 
+import com.lbartolini.app.cinema.model.Film;
 import com.lbartolini.app.cinema.repository.FilmRepository;
 
 public class BuyBaseTicketHelper implements BuyTicketHelper {
@@ -12,8 +13,9 @@ public class BuyBaseTicketHelper implements BuyTicketHelper {
 
 	@Override
 	public int getRemainingTickets(String filmId) {
-		// TODO Auto-generated method stub
-		return 0;
+		Film film = filmRepository.getFilm(filmId);
+		if (film == null) return 0;
+		return film.getBaseTicketsTotal()-film.getBaseTickets().size();
 	}
 
 	@Override
