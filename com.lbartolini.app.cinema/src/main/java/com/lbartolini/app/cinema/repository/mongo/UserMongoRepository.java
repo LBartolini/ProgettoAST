@@ -45,8 +45,7 @@ public class UserMongoRepository implements UserRepository {
 	
 	@Override
 	public void registerUser(String username) {
-		// TODO Auto-generated method stub
-		
+		userCollection.insertOne(new Document("username", username));
 	}
 
 	private Ticket convertDocumentToTicketOfUser(String username, Document d) {

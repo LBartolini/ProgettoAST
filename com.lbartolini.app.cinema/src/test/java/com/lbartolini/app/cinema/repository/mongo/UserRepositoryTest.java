@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.bson.Document;
 import org.junit.After;
@@ -127,12 +129,25 @@ public class UserRepositoryTest {
 					new Ticket(film2, user2, 1, 2));
 	}
 	
+	@Test
+	public void testRegisterUser() {
+		userRepository.registerUser(USERNAME_1);
+		
+		assertThat(retrieveAllUsers()).containsExactly(new User(USERNAME_1));
+	}
+	
+	private List<User> retrieveAllUsers() {
+		return StreamSupport
+				.stream(userCollection.find().spliterator(), false)
+				.map((Document d) -> new User(d.getString("username")))
+				.collect(Collectors.toList());
+	}
+
 	private void insertUserInDB(User user) {
 		userCollection.insertOne(new Document("username", user.getUsername()));
 	}
 	
 	private void insertFilmInDB(Film film) {
-		
 		filmCollection.insertOne(new Document()
 				.append("id", film.getId())
 				.append("name", film.getName())
