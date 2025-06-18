@@ -121,7 +121,7 @@ public class FilmControllerTest {
 	}
 	
 	@Test
-	public void testBuyTicketOneIsAvailable() {
+	public void testBuyTicketOneAvailable() {
 		when(buyHelper.getRemainingTickets(FILM_ID_1)).thenReturn(1);
 		User user = new User(USERNAME); 
 		when(userRepository.getUser(USERNAME)).thenReturn(user);
