@@ -11,4 +11,6 @@ public interface UserRepository {
 
 	List<Ticket> getTickets(String username);
 
+	void registerUser(String username);
+
 }

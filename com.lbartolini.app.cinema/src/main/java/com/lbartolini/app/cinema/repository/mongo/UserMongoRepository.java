@@ -42,6 +42,11 @@ public class UserMongoRepository implements UserRepository {
 			.map((Document d) -> convertDocumentToTicketOfUser(username, d))
 			.collect(Collectors.toList());
 	}
+	
+	@Override
+	public void registerUser(String username) {
+		userCollection.insertOne(new Document("username", username));
+	}
 
 	private Ticket convertDocumentToTicketOfUser(String username, Document d) {
 		Film film = new Film(
@@ -58,5 +63,5 @@ public class UserMongoRepository implements UserRepository {
 				Collections.frequency(d.getList("baseTickets", String.class), username),
 				Collections.frequency(d.getList("premiumTickets", String.class), username));
 	}
-
+	
 }
