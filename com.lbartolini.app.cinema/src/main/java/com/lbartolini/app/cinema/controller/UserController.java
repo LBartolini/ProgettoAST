@@ -1,6 +1,7 @@
 package com.lbartolini.app.cinema.controller;
 
 import com.lbartolini.app.cinema.controller.exceptions.UserAlreadyRegisteredException;
+import com.lbartolini.app.cinema.controller.exceptions.UserNotRegisteredException;
 import com.lbartolini.app.cinema.repository.UserRepository;
 import com.lbartolini.app.cinema.view.CinemaView;
 
@@ -22,6 +23,15 @@ public class UserController {
 		}
 		
 		userRepository.registerUser(username);
+	}
+
+	public void getTickets(String username) throws UserNotRegisteredException {
+		if (userRepository.getUser(username) == null) {
+			cinemaView.showError("User not registered");
+			throw new UserNotRegisteredException();
+		}
+		
+		cinemaView.showTickets(userRepository.getTickets(username));
 	}
 
 }
