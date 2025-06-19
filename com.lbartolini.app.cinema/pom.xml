@@ -70,7 +70,7 @@
       java:S2699
     </sonar.issue.ignore.multicriteria.e15.ruleKey>
     <sonar.issue.ignore.multicriteria.e15.resourceKey>
-      **/CinemaSwingView.java
+      **/CinemaSwingViewTest.java
     </sonar.issue.ignore.multicriteria.e15.resourceKey>
     
   </properties>
@@ -180,7 +180,6 @@
             <targetClasses>
               <param>com.lbartolini.app.cinema.controller.*</param>
               <param>com.lbartolini.app.cinema.repository.*</param>
-              <param>com.lbartolini.app.cinema.view.*</param>
             </targetClasses>
             <targetTests>
               <param>com.lbartolini.app.cinema.controller.*</param>
