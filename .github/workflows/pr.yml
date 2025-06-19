@@ -25,7 +25,7 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml', '**/*.yml') }}
         restore-keys: ${{ runner.os }}-m2-
     - name: Build with Maven
-      run: mvn verify -Pmutation-testing
+      run: xvfb-run mvn verify -Pmutation-testing
       working-directory: com.lbartolini.app.cinema
     - name: Archive PIT Report
       uses: actions/upload-artifact@v4
