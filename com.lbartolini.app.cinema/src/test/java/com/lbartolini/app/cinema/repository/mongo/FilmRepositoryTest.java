@@ -76,8 +76,8 @@ public class FilmRepositoryTest {
 	
 	@Test
 	public void testGetFilmWhenFilmNotPresent() {
-		Film another_film = new Film("ID_1", "NAME_1", "ROOM_1", "DATETIME_1", 10, 10, Collections.nCopies(2, "SOME_USER"), Collections.emptyList());
-		insertFilmInDB(another_film);
+		Film anotherFilm = new Film("ID_1", "NAME_1", "ROOM_1", "DATETIME_1", 10, 10, Collections.nCopies(2, "SOME_USER"), Collections.emptyList());
+		insertFilmInDB(anotherFilm);
 		
 		assertThat(filmRepository.getFilm(FILM_ID)).isNull();
 	}
@@ -93,8 +93,8 @@ public class FilmRepositoryTest {
 	
 	@Test
 	public void testGetFilmWhenSomeArePresent() {
-		Film another_film = new Film("ID_2", "NAME_2", "ROOM_2", "DATETIME_2", 5, 5, Collections.nCopies(1, "SOME_USER"), Collections.nCopies(3, "SOME_USER"));
-		insertFilmInDB(another_film);
+		Film anotherFilm = new Film("ID_2", "NAME_2", "ROOM_2", "DATETIME_2", 5, 5, Collections.nCopies(1, "SOME_USER"), Collections.nCopies(3, "SOME_USER"));
+		insertFilmInDB(anotherFilm);
 		String filmId = "ID_1";
 		Film filmToFind = new Film(filmId, "NAME_1", "ROOM_1", "DATETIME_1", 10, 10, Collections.nCopies(2, "SOME_USER"), Collections.emptyList());
 		insertFilmInDB(filmToFind);
