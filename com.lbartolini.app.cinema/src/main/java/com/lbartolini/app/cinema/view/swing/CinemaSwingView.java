@@ -15,11 +15,15 @@ import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
 import java.awt.Insets;
+
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class CinemaSwingView extends JFrame implements CinemaView {
 
@@ -32,7 +36,9 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 	private JLabel lblTicket;
 	private JLabel lblFilm;
 	private JList<Ticket> listTicket;
+	private DefaultListModel<Ticket> listTicketModel;
 	private JList<Film> listFilm;
+	private DefaultListModel<Film> listFilmModel;
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_1;
 	private JLabel lblError;
@@ -81,6 +87,15 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		contentPane.add(lblUsername, gbc_lblLabelusername);
 		
 		txtUsername = new JTextField();
+		txtUsername.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				btnLogin.setEnabled(!txtUsername.getText().trim().isEmpty());
+				btnRegister.setEnabled(!txtUsername.getText().trim().isEmpty());
+				
+				checkBuyButtonsEnabled();
+			}
+		});
 		txtUsername.setName("usernameTextBox");
 		GridBagConstraints gbc_txtUsernametextbox = new GridBagConstraints();
 		gbc_txtUsernametextbox.insets = new Insets(0, 0, 5, 0);
@@ -137,7 +152,8 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		gbc_scrollPane.gridy = 4;
 		contentPane.add(scrollPane, gbc_scrollPane);
 		
-		listTicket = new JList<Ticket>();
+		listTicketModel = new DefaultListModel<Ticket>();
+		listTicket = new JList<Ticket>(listTicketModel);
 		listTicket.setEnabled(false);
 		listTicket.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listTicket.setName("ticketList");
@@ -190,7 +206,9 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		gbc_scrollPane_1.gridy = 6;
 		contentPane.add(scrollPane_1, gbc_scrollPane_1);
 		
-		listFilm = new JList<Film>();
+		listFilmModel = new DefaultListModel<Film>();
+		listFilm = new JList<Film>(listFilmModel);
+		listFilm.addListSelectionListener(arg0 -> checkBuyButtonsEnabled());
 		listFilm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listFilm.setName("filmList");
 		scrollPane_1.setViewportView(listFilm);
@@ -222,6 +240,27 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 	public void showTickets(List<Ticket> list) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	DefaultListModel<Ticket> getListTicketModel() {
+		return listTicketModel;
+	}
+
+	DefaultListModel<Film> getListFilmModel() {
+		return listFilmModel;
+	}
+	
+	private void checkBuyButtonsEnabled() {
+		int baseTicketsLeft = 0;
+		int premiumTicketsLeft = 0;
+		if (listFilm.getSelectedIndex() != -1) {
+			Film f = listFilm.getSelectedValue();
+			baseTicketsLeft = f.getBaseTicketsTotal() - f.getBaseTickets().size();
+			premiumTicketsLeft = f.getPremiumTicketsTotal() - f.getPremiumTickets().size();
+		}
+		
+		btnBuyBaseTicket.setEnabled(!txtUsername.getText().trim().isEmpty() && baseTicketsLeft > 0);
+		btnBuyPremiumTicket.setEnabled(!txtUsername.getText().trim().isEmpty() && premiumTicketsLeft > 0);
 	}
 
 }
