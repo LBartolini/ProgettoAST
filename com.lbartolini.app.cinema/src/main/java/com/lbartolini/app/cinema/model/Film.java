@@ -67,7 +67,8 @@ public class Film {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(datetime, id, name, room);
+		return Objects.hash(baseTickets, baseTicketsTotal, datetime, id, name, premiumTickets, premiumTicketsTotal,
+				room);
 	}
 
 	@Override
@@ -79,15 +80,17 @@ public class Film {
 		if (getClass() != obj.getClass())
 			return false;
 		Film other = (Film) obj;
-		return Objects.equals(datetime, other.datetime) && Objects.equals(id, other.id)
-				&& Objects.equals(name, other.name) && Objects.equals(room, other.room);
+		return Objects.equals(baseTickets, other.baseTickets) && baseTicketsTotal == other.baseTicketsTotal
+				&& Objects.equals(datetime, other.datetime) && Objects.equals(id, other.id)
+				&& Objects.equals(name, other.name) && Objects.equals(premiumTickets, other.premiumTickets)
+				&& premiumTicketsTotal == other.premiumTicketsTotal && Objects.equals(room, other.room);
 	}
 
 	@Override
 	public String toString() {
-		return "Film [id=" + id + ", name=" + name + ", room=" + room + ", datetime=" + datetime
-				+ ", baseTicketsTotal=" + baseTicketsTotal + ", premiumTicketsTotal="
-				+ premiumTicketsTotal + "]";
+		return "Film [id=" + id + ", name=" + name + ", room=" + room + ", datetime=" + datetime + ", baseTicketsTotal="
+				+ baseTicketsTotal + ", premiumTicketsTotal=" + premiumTicketsTotal + ", baseTickets=" + baseTickets
+				+ ", premiumTickets=" + premiumTickets + "]";
 	}
 
 }

@@ -19,7 +19,7 @@ public class UserController {
 	public void registerUser(String username) throws UserAlreadyRegisteredException {
 		if (userRepository.getUser(username) != null) {
 			cinemaView.showError("User already registered");
-			throw new UserAlreadyRegisteredException();		
+			throw new UserAlreadyRegisteredException();
 		}
 		
 		userRepository.registerUser(username);

@@ -108,6 +108,7 @@
           <configuration>
             <excludes>
               <exclude>**/model/*.*</exclude>
+              <exclude>**/app/swing/*.*</exclude>
             </excludes>
           </configuration>
           <executions>
@@ -130,7 +131,7 @@
                       <limit>
                         <counter>LINE</counter>
                         <value>COVEREDRATIO</value>
-                        <minimum>0.90</minimum>
+                        <minimum>1</minimum>
                       </limit>
                     </limits>
                   </rule>
@@ -160,11 +161,12 @@
             <targetTests>
               <param>com.lbartolini.app.cinema.controller.*</param>
               <param>com.lbartolini.app.cinema.repository.*</param>
+              <param>com.lbartolini.app.cinema.view.*</param>
             </targetTests>
             <mutators>
               <mutator>DEFAULTS</mutator>
             </mutators>
-            <mutationThreshold>90</mutationThreshold>
+            <mutationThreshold>100</mutationThreshold>
           </configuration>
         </plugin>
       </plugins>

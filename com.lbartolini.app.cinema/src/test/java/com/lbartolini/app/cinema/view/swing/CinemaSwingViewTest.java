@@ -1,5 +1,8 @@
 package com.lbartolini.app.cinema.view.swing;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.assertj.swing.annotation.GUITest;
@@ -14,6 +17,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.lbartolini.app.cinema.model.Film;
+import com.lbartolini.app.cinema.model.Ticket;
+import com.lbartolini.app.cinema.model.User;
 
 @RunWith(GUITestRunner.class)
 public class CinemaSwingViewTest extends AssertJSwingJUnitTestCase {
@@ -107,6 +112,51 @@ public class CinemaSwingViewTest extends AssertJSwingJUnitTestCase {
 		
 		window.button(JButtonMatcher.withText("Buy Base")).requireDisabled();
 		window.button(JButtonMatcher.withText("Buy Premium")).requireDisabled();
+	}
+	
+	@Test @GUITest
+	public void testShowError() {
+		String errorMessage = "some error message";
+		GuiActionRunner.execute(() -> {
+			cinemaSwingView.showError(errorMessage);
+		});
+		
+		window.label("errorLabel").requireText(errorMessage);
+	}
+	
+	@Test @GUITest
+	public void testShowAllFilms() {
+		GuiActionRunner.execute(() -> {
+			cinemaSwingView.getLblError().setText("some error message");
+		});
+		Film film1 = new Film("ID_1", "NAME_1", "ROOM_1", "DATETIME_1", 10, 10, Collections.emptyList(), Collections.emptyList());
+		Film film2 = new Film("ID_2", "NAME_2", "ROOM_2", "DATETIME_2", 5, 5, Collections.emptyList(), Collections.emptyList());
+		
+		GuiActionRunner.execute(() -> {
+			cinemaSwingView.showAllFilms(Arrays.asList(film1, film2));
+		});
+		
+		assertThat(window.list("filmList").contents()).containsExactly(film1.toString(), film2.toString());
+		window.label("errorLabel").requireText(" ");
+	}
+	
+	@Test @GUITest
+	public void testShowTickets() {
+		GuiActionRunner.execute(() -> {
+			cinemaSwingView.getLblError().setText("some error message");
+		});
+		User user = new User("USERNAME");
+		Film film1 = new Film("ID_1", "NAME_1", "ROOM_1", "DATETIME_1", 10, 10, Collections.nCopies(1, "USERNAME"), Collections.nCopies(1, "USERNAME"));
+		Ticket ticket1 = new Ticket(film1, user, 1, 1);
+		Film film2 = new Film("ID_2", "NAME_2", "ROOM_2", "DATETIME_2", 10, 10, Collections.nCopies(2, "USERNAME"), Collections.nCopies(2, "USERNAME"));
+		Ticket ticket2 = new Ticket(film2, user, 2, 2);
+		
+		GuiActionRunner.execute(() -> {
+			cinemaSwingView.showTickets(Arrays.asList(ticket1, ticket2));
+		});
+
+		assertThat(window.list("ticketList").contents()).containsExactly(ticket1.toString(), ticket2.toString());
+		window.label("errorLabel").requireText(" ");
 	}
 
 }

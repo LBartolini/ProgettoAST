@@ -1,6 +1,5 @@
 package com.lbartolini.app.cinema.view.swing;
 
-import java.awt.EventQueue;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -45,23 +44,7 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 	private JPanel panel_1;
 	private JButton btnBuyBaseTicket;
 	private JButton btnBuyPremiumTicket;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CinemaSwingView frame = new CinemaSwingView();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	
 	/**
 	 * Create the frame.
 	 */
@@ -214,42 +197,45 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		scrollPane_1.setViewportView(listFilm);
 		
 		lblError = new JLabel(" ");
-		lblError.setForeground(new Color(224, 27, 36));
-		lblError.setName("errorLabel");
+		getLblError().setForeground(new Color(224, 27, 36));
+		getLblError().setName("errorLabel");
 		GridBagConstraints gbc_lblError = new GridBagConstraints();
 		gbc_lblError.gridwidth = 2;
 		gbc_lblError.gridx = 0;
 		gbc_lblError.gridy = 7;
-		contentPane.add(lblError, gbc_lblError);
+		contentPane.add(getLblError(), gbc_lblError);
 
 	}
 
 	@Override
 	public void showAllFilms(List<Film> list) {
-		// TODO Auto-generated method stub
-		
+		list.stream().forEach(listFilmModel::addElement);
+		resetErrorMessage();
 	}
 
 	@Override
 	public void showError(String errorMessage) {
-		// TODO Auto-generated method stub
-		
+		getLblError().setText(errorMessage);
 	}
 
 	@Override
 	public void showTickets(List<Ticket> list) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	DefaultListModel<Ticket> getListTicketModel() {
-		return listTicketModel;
+		list.stream().forEach(listTicketModel::addElement);
+		resetErrorMessage();
 	}
 
 	DefaultListModel<Film> getListFilmModel() {
 		return listFilmModel;
 	}
 	
+	private void resetErrorMessage() {
+		lblError.setText(" ");
+	}
+	
+	JLabel getLblError() {
+		return lblError;
+	}
+
 	private void checkBuyButtonsEnabled() {
 		int baseTicketsLeft = 0;
 		int premiumTicketsLeft = 0;
