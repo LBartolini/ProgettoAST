@@ -125,6 +125,29 @@ public class FilmRepositoryTest {
 		assertThat(getFilmFromDB(filmId).getBaseTickets()).containsExactly(otherUser, USERNAME);
 	}
 	
+	@Test
+	public void testBuyPremiumTicketWhenFirstToBuy() {
+		String filmId = "ID_1";
+		Film film = new Film(filmId, "NAME_1", "ROOM_1", "DATETIME_1", 10, 10, Collections.emptyList(), Collections.emptyList());
+		insertFilmInDB(film);
+		
+		filmRepository.buyPremiumTicket(filmId, USERNAME);
+		
+		assertThat(getFilmFromDB(filmId).getPremiumTickets()).containsExactly(USERNAME);
+	}
+	
+	@Test
+	public void testBuyPremiumTicketWhenOtherAlreadyBoughtSome() {
+		String filmId = "ID_1";
+		String otherUser = "OTHER_USER_ID";
+		Film film = new Film(filmId, "NAME_1", "ROOM_1", "DATETIME_1", 10, 10, Collections.emptyList(), Collections.nCopies(1, otherUser));
+		insertFilmInDB(film);
+		
+		filmRepository.buyPremiumTicket(filmId, USERNAME);
+		
+		assertThat(getFilmFromDB(filmId).getPremiumTickets()).containsExactly(otherUser, USERNAME);
+	}
+	
 	private void insertFilmInDB(Film film) {
 		filmCollection.insertOne(new Document()
 				.append("id", film.getId())

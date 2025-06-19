@@ -35,8 +35,7 @@ public class FilmMongoRepository implements FilmRepository {
 
 	@Override
 	public void buyPremiumTicket(String filmId, String username) {
-		// TODO Auto-generated method stub
-		
+		filmCollection.findOneAndUpdate(Filters.eq("id", filmId), Updates.push("premiumTickets", username));
 	}
 
 	@Override
