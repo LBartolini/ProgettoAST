@@ -16,6 +16,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 
 public class FilmRepositoryTest {
 	
@@ -23,6 +24,7 @@ public class FilmRepositoryTest {
 	private static final String FILM_COLLECTION_NAME = "film";
 	
 	private static final String FILM_ID = "FILM_ID";
+	private static final String USERNAME = "USERNAME";
 	
 	@ClassRule
 	public static MongoDBContainer mongo = new MongoDBContainer("mongo:4.4.3");
@@ -100,6 +102,29 @@ public class FilmRepositoryTest {
 		assertThat(filmRepository.getFilm(filmId)).isEqualTo(filmToFind);
 	}
 	
+	@Test
+	public void testBuyBaseTicketWhenFirstToBuy() {
+		String filmId = "ID_1";
+		Film film = new Film(filmId, "NAME_1", "ROOM_1", "DATETIME_1", 10, 10, Collections.emptyList(), Collections.emptyList());
+		insertFilmInDB(film);
+		
+		filmRepository.buyBaseTicket(filmId, USERNAME);
+		
+		assertThat(getFilmFromDB(filmId).getBaseTickets()).containsExactly(USERNAME);
+	}
+	
+	@Test
+	public void testBuyBaseTicketWhenOtherAlreadyBoughtSome() {
+		String filmId = "ID_1";
+		String otherUser = "OTHER_USER_ID";
+		Film film = new Film(filmId, "NAME_1", "ROOM_1", "DATETIME_1", 10, 10, Collections.nCopies(1, otherUser), Collections.emptyList());
+		insertFilmInDB(film);
+		
+		filmRepository.buyBaseTicket(filmId, USERNAME);
+		
+		assertThat(getFilmFromDB(filmId).getBaseTickets()).containsExactly(otherUser, USERNAME);
+	}
+	
 	private void insertFilmInDB(Film film) {
 		filmCollection.insertOne(new Document()
 				.append("id", film.getId())
@@ -111,6 +136,10 @@ public class FilmRepositoryTest {
 				.append("baseTickets", film.getBaseTickets())
 				.append("premiumTickets", film.getPremiumTickets())
 				);
+	}
+	
+	private Film getFilmFromDB(String filmId) {
+		return FilmMongoRepository.convertDocumentToFilm(filmCollection.find(Filters.eq("id", filmId)).first());
 	}
 
 }

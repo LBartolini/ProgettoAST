@@ -11,6 +11,7 @@ import com.lbartolini.app.cinema.repository.FilmRepository;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 
 public class FilmMongoRepository implements FilmRepository {
 	
@@ -23,14 +24,13 @@ public class FilmMongoRepository implements FilmRepository {
 	@Override
 	public List<Film> getAllFilms() {
 		return StreamSupport.stream(filmCollection.find().spliterator(), false)
-				.map(this::convertDocumentToFilm)
+				.map(FilmMongoRepository::convertDocumentToFilm)
 				.collect(Collectors.toList());
 	}
 
 	@Override
 	public void buyBaseTicket(String filmId, String username) {
-		// TODO Auto-generated method stub
-		
+		filmCollection.findOneAndUpdate(Filters.eq("id", filmId), Updates.push("baseTickets", username));
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class FilmMongoRepository implements FilmRepository {
 		return convertDocumentToFilm(found);
 	}
 
-	private Film convertDocumentToFilm(Document d) {
+	static Film convertDocumentToFilm(Document d) {
 		return new Film(
 				d.getString("id"), 
 				d.getString("name"), 
