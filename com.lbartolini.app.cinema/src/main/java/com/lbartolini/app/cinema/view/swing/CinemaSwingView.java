@@ -135,8 +135,8 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		gbc_scrollPane.gridy = 4;
 		contentPane.add(scrollPane, gbc_scrollPane);
 		
-		listTicketModel = new DefaultListModel<Ticket>();
-		listTicket = new JList<Ticket>(listTicketModel);
+		listTicketModel = new DefaultListModel<>();
+		listTicket = new JList<>(listTicketModel);
 		listTicket.setEnabled(false);
 		listTicket.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listTicket.setName("ticketList");
@@ -189,8 +189,8 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		gbc_scrollPane_1.gridy = 6;
 		contentPane.add(scrollPane_1, gbc_scrollPane_1);
 		
-		listFilmModel = new DefaultListModel<Film>();
-		listFilm = new JList<Film>(listFilmModel);
+		listFilmModel = new DefaultListModel<>();
+		listFilm = new JList<>(listFilmModel);
 		listFilm.addListSelectionListener(arg0 -> checkBuyButtonsEnabled());
 		listFilm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listFilm.setName("filmList");
