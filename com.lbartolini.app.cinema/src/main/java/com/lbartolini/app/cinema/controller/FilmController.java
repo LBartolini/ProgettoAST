@@ -27,7 +27,7 @@ public class FilmController {
 		int ticketsRemaining = buyHelper.getRemainingTickets(filmId);
 		
 		if (ticketsRemaining <= 0) {
-			cinemaView.showError("No Base Tickets available");
+			cinemaView.showError("No Tickets available");
 			return;
 		}
 		

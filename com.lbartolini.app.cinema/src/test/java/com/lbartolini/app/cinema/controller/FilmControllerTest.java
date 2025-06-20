@@ -98,7 +98,7 @@ public class FilmControllerTest {
 		filmController.buyTicket(FILM_ID_1, USERNAME, buyHelper);
 		
 		verify(buyHelper).getRemainingTickets(FILM_ID_1);
-		verify(cinemaView).showError("No Base Tickets available");
+		verify(cinemaView).showError("No Tickets available");
 		verifyNoMoreInteractions(buyHelper);
 		verifyNoMoreInteractions(cinemaView);
 	}
