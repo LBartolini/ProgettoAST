@@ -53,7 +53,7 @@ public class SwingViewIT extends AssertJSwingJUnitTestCase {
 	private UserController userController;
 	private BuyBaseTicketHelper buyBaseTicketHelper;
 	private BuyPremiumTicketHelper buyPremiumTicketHelper;
-	private CinemaSwingView cinemaView;
+	private CinemaSwingView cinemaSwingView;
 	private MongoCollection<Document> filmCollection;
 	private Film film;
 	private FrameFixture window;
@@ -77,15 +77,15 @@ public class SwingViewIT extends AssertJSwingJUnitTestCase {
 		buyPremiumTicketHelper = new BuyPremiumTicketHelper(filmRepository);
 		
 		GuiActionRunner.execute(() -> {
-			cinemaView = new CinemaSwingView(buyBaseTicketHelper, buyPremiumTicketHelper);
-			filmController = new FilmController(filmRepository, userRepository, cinemaView);
-			userController = new UserController(userRepository, cinemaView);
-			cinemaView.setFilmController(filmController);
-			cinemaView.setUserController(userController);
-			return cinemaView;
+			cinemaSwingView = new CinemaSwingView(buyBaseTicketHelper, buyPremiumTicketHelper);
+			filmController = new FilmController(filmRepository, userRepository, cinemaSwingView);
+			userController = new UserController(userRepository, cinemaSwingView);
+			cinemaSwingView.setFilmController(filmController);
+			cinemaSwingView.setUserController(userController);
+			return cinemaSwingView;
 		});
 		
-		window = new FrameFixture(robot(), cinemaView);
+		window = new FrameFixture(robot(), cinemaSwingView);
 		window.show();
 	}
 	
@@ -128,6 +128,56 @@ public class SwingViewIT extends AssertJSwingJUnitTestCase {
 		
 		window.label("errorLabel").requireText(" ");
 		assertThat(window.list("ticketList").contents()).containsExactly(new Ticket(film, new User(USERNAME), FILM_INITIAL_BASE_TICKETS, FILM_INITIAL_PREMIUM_TICKETS).toString());
+	}
+	
+	@Test @GUITest
+	public void testBuyBaseTicket() {
+		Film filmToBuy = new Film("ID_2", "NAME_2", "ROOM_2", "DATETIME_2", 7, 7, 
+				new ArrayList<String>(Collections.emptyList()), 
+				new ArrayList<String>(Collections.emptyList()));
+		insertFilmInDB(filmToBuy);
+		GuiActionRunner.execute(() -> filmController.getAllFilms());
+		
+		window.textBox("usernameTextBox").setText("").enterText(USERNAME);
+		window.button(JButtonMatcher.withText("Login")).click();
+		
+		assertThat(window.list("ticketList").contents()).containsExactly(
+				new Ticket(film, new User(USERNAME), FILM_INITIAL_BASE_TICKETS, FILM_INITIAL_PREMIUM_TICKETS).toString());
+		
+		window.list("filmList").selectItem(1);
+		window.button(JButtonMatcher.withText("Buy Base")).click();
+		
+		filmToBuy.getBaseTickets().add(USERNAME);
+		
+		assertThat(window.list("ticketList").contents()).containsExactly(
+				new Ticket(film, new User(USERNAME), FILM_INITIAL_BASE_TICKETS, FILM_INITIAL_PREMIUM_TICKETS).toString(),
+				new Ticket(filmToBuy, new User(USERNAME), 1, 0).toString());
+		assertThat(window.list("filmList").contents()).containsExactly(film.toString(), filmToBuy.toString());
+	}
+	
+	@Test @GUITest
+	public void testBuyPremiumTicket() {
+		Film filmToBuy = new Film("ID_2", "NAME_2", "ROOM_2", "DATETIME_2", 7, 7, 
+				new ArrayList<String>(Collections.emptyList()), 
+				new ArrayList<String>(Collections.emptyList()));
+		insertFilmInDB(filmToBuy);
+		GuiActionRunner.execute(() -> filmController.getAllFilms());
+		
+		window.textBox("usernameTextBox").setText("").enterText(USERNAME);
+		window.button(JButtonMatcher.withText("Login")).click();
+		
+		assertThat(window.list("ticketList").contents()).containsExactly(
+				new Ticket(film, new User(USERNAME), FILM_INITIAL_BASE_TICKETS, FILM_INITIAL_PREMIUM_TICKETS).toString());
+		
+		window.list("filmList").selectItem(1);
+		window.button(JButtonMatcher.withText("Buy Premium")).click();
+		
+		filmToBuy.getPremiumTickets().add(USERNAME);
+		
+		assertThat(window.list("ticketList").contents()).containsExactly(
+				new Ticket(film, new User(USERNAME), FILM_INITIAL_BASE_TICKETS, FILM_INITIAL_PREMIUM_TICKETS).toString(),
+				new Ticket(filmToBuy, new User(USERNAME), 0, 1).toString());
+		assertThat(window.list("filmList").contents()).containsExactly(film.toString(), filmToBuy.toString());
 	}
 	
 	private void insertFilmInDB(Film film) {
