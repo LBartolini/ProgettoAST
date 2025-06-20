@@ -132,6 +132,7 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		btnRegister.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				resetErrorMessage();
 				userController.registerUser(txtUsername.getText().trim());
 			}
 		});

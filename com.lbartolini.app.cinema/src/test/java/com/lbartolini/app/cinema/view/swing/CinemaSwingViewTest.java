@@ -119,8 +119,7 @@ public class CinemaSwingViewTest extends AssertJSwingJUnitTestCase {
 		buyPremium.requireDisabled();
 		
 		window.list("filmList").selectItem(0);
-		window.textBox("usernameTextBox").setText("");
-		window.textBox("usernameTextBox").enterText(" ");
+		window.textBox("usernameTextBox").setText("").enterText(" ");
 		
 		buyBase.requireDisabled();
 		buyPremium.requireDisabled();
@@ -202,12 +201,16 @@ public class CinemaSwingViewTest extends AssertJSwingJUnitTestCase {
 	
 	@Test @GUITest
 	public void testLogicRegisterButton() {
+		GuiActionRunner.execute(() -> {
+			cinemaSwingView.getLblError().setText("some error message");
+		});
 		String username = " username ";
 		window.textBox("usernameTextBox").enterText(username);
 		
 		window.button(JButtonMatcher.withText("Register")).click();
 		
 		verify(userController).registerUser(username.trim());
+		window.label("errorLabel").requireText(" ");
 	}
 	
 	@Test @GUITest

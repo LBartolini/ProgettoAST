@@ -8,7 +8,7 @@ public class UserController {
 	private CinemaView cinemaView;
 	private UserRepository userRepository;
 
-	public UserController(CinemaView cinemaView, UserRepository userRepository) {
+	public UserController(UserRepository userRepository, CinemaView cinemaView) {
 		this.cinemaView = cinemaView;
 		this.userRepository = userRepository;
 		
