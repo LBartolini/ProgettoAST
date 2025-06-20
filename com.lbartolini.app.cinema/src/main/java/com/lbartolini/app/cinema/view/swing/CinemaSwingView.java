@@ -8,6 +8,8 @@ import javax.swing.border.EmptyBorder;
 
 import com.lbartolini.app.cinema.controller.FilmController;
 import com.lbartolini.app.cinema.controller.UserController;
+import com.lbartolini.app.cinema.controller.helper.BuyBaseTicketHelper;
+import com.lbartolini.app.cinema.controller.helper.BuyPremiumTicketHelper;
 import com.lbartolini.app.cinema.model.Film;
 import com.lbartolini.app.cinema.model.Ticket;
 import com.lbartolini.app.cinema.view.CinemaView;
@@ -50,13 +52,15 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 	private JPanel panel_1;
 	private JButton btnBuyBaseTicket;
 	private JButton btnBuyPremiumTicket;
+	
 	private FilmController filmController;
 	private UserController userController;
 	
 	/**
 	 * Create the frame.
 	 */
-	public CinemaSwingView() {
+	public CinemaSwingView(BuyBaseTicketHelper buyBaseTicketHelper, BuyPremiumTicketHelper buyPremiumTicketHelper) {
+
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -184,6 +188,15 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		panel_1.setLayout(gbl_panel_1);
 		
 		btnBuyBaseTicket = new JButton("Buy Base");
+		btnBuyBaseTicket.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				filmController.buyTicket(
+						listFilm.getSelectedValue().getId(), 
+						txtUsername.getText().trim(), 
+						buyBaseTicketHelper);
+			}
+		});
 		btnBuyBaseTicket.setEnabled(false);
 		GridBagConstraints gbc_btnBuyBaseTicket = new GridBagConstraints();
 		gbc_btnBuyBaseTicket.fill = GridBagConstraints.BOTH;
@@ -193,6 +206,15 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		panel_1.add(btnBuyBaseTicket, gbc_btnBuyBaseTicket);
 		
 		btnBuyPremiumTicket = new JButton("Buy Premium");
+		btnBuyPremiumTicket.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				filmController.buyTicket(
+						listFilm.getSelectedValue().getId(), 
+						txtUsername.getText().trim(), 
+						buyPremiumTicketHelper);
+			}
+		});
 		btnBuyPremiumTicket.setEnabled(false);
 		GridBagConstraints gbc_btnBuyPremiumTicket = new GridBagConstraints();
 		gbc_btnBuyPremiumTicket.fill = GridBagConstraints.BOTH;

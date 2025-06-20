@@ -21,6 +21,8 @@ import org.mockito.MockitoAnnotations;
 
 import com.lbartolini.app.cinema.controller.FilmController;
 import com.lbartolini.app.cinema.controller.UserController;
+import com.lbartolini.app.cinema.controller.helper.BuyBaseTicketHelper;
+import com.lbartolini.app.cinema.controller.helper.BuyPremiumTicketHelper;
 import com.lbartolini.app.cinema.model.Film;
 import com.lbartolini.app.cinema.model.Ticket;
 import com.lbartolini.app.cinema.model.User;
@@ -34,6 +36,12 @@ public class CinemaSwingViewTest extends AssertJSwingJUnitTestCase {
 	@Mock
 	private UserController userController;
 	
+	@Mock
+	private BuyBaseTicketHelper buyBaseTicketHelper;
+	
+	@Mock
+	private BuyPremiumTicketHelper buyPremiumTicketHelper;
+	
 	private AutoCloseable closeable;
 
 	private CinemaSwingView cinemaSwingView;
@@ -43,7 +51,7 @@ public class CinemaSwingViewTest extends AssertJSwingJUnitTestCase {
 	protected void onSetUp() throws Exception {
 		closeable = MockitoAnnotations.openMocks(this);
 		GuiActionRunner.execute(() -> {
-			cinemaSwingView = new CinemaSwingView();
+			cinemaSwingView = new CinemaSwingView(buyBaseTicketHelper, buyPremiumTicketHelper);
 			cinemaSwingView.setFilmController(filmController);
 			cinemaSwingView.setUserController(userController);
 			return cinemaSwingView;
@@ -200,5 +208,37 @@ public class CinemaSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Register")).click();
 		
 		verify(userController).registerUser(username.trim());
+	}
+	
+	@Test @GUITest
+	public void testLogicBuyBaseButton() {
+		String username = " username ";
+		String filmId = "ID_1";
+		window.textBox("usernameTextBox").enterText(username);
+		GuiActionRunner.execute(() -> {
+			cinemaSwingView.getListFilmModel()
+				.addElement(new Film(filmId, "NAME_1", "ROOM_1", "DATETIME_1", 10, 10, Collections.emptyList(), Collections.emptyList()));
+		});
+		window.list("filmList").selectItem(0);
+		
+		window.button(JButtonMatcher.withText("Buy Base")).click();
+		
+		verify(filmController).buyTicket(filmId, username.trim(), buyBaseTicketHelper);
+	}
+	
+	@Test @GUITest
+	public void testLogicBuyPremiumButton() {
+		String username = " username ";
+		String filmId = "ID_1";
+		window.textBox("usernameTextBox").enterText(username);
+		GuiActionRunner.execute(() -> {
+			cinemaSwingView.getListFilmModel()
+				.addElement(new Film(filmId, "NAME_1", "ROOM_1", "DATETIME_1", 10, 10, Collections.emptyList(), Collections.emptyList()));
+		});
+		window.list("filmList").selectItem(0);
+		
+		window.button(JButtonMatcher.withText("Buy Premium")).click();
+		
+		verify(filmController).buyTicket(filmId, username.trim(), buyPremiumTicketHelper);
 	}
 }
