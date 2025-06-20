@@ -1,7 +1,6 @@
 package com.lbartolini.app.cinema.controller;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -19,8 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.lbartolini.app.cinema.controller.exceptions.UserAlreadyRegisteredException;
-import com.lbartolini.app.cinema.controller.exceptions.UserNotRegisteredException;
 import com.lbartolini.app.cinema.model.Film;
 import com.lbartolini.app.cinema.model.Ticket;
 import com.lbartolini.app.cinema.model.User;
@@ -71,7 +68,7 @@ public class UserControllerTest {
 	public void testRegisterUserWhenUserAlreadyRegistered() {
 		when(userRepository.getUser(USERNAME)).thenReturn(new User(USERNAME));
 		
-		assertThrows(UserAlreadyRegisteredException.class, () -> userController.registerUser(USERNAME));
+		userController.registerUser(USERNAME);
 		
 		verify(userRepository).getUser(USERNAME);
 		verify(cinemaView).showError("User already registered");
@@ -95,7 +92,7 @@ public class UserControllerTest {
 	public void testGetTicketsWhenUserNotRegistered() {
 		when(userRepository.getUser(USERNAME)).thenReturn(null);
 		
-		assertThrows(UserNotRegisteredException.class, () -> userController.getTickets(USERNAME));
+		userController.getTickets(USERNAME);
 		
 		verify(userRepository).getUser(USERNAME);
 		verify(cinemaView).showError("User not registered");

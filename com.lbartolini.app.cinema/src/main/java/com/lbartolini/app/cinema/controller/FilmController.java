@@ -1,7 +1,5 @@
 package com.lbartolini.app.cinema.controller;
 
-import com.lbartolini.app.cinema.controller.exceptions.NoTicketsAvailableException;
-import com.lbartolini.app.cinema.controller.exceptions.UserNotRegisteredException;
 import com.lbartolini.app.cinema.controller.helper.BuyTicketHelper;
 import com.lbartolini.app.cinema.model.User;
 import com.lbartolini.app.cinema.repository.FilmRepository;
@@ -25,25 +23,25 @@ public class FilmController {
 		cinemaView.showAllFilms(filmRepository.getAllFilms());
 	}
 
-	public void buyTicket(String filmId, String username, BuyTicketHelper buyHelper)
-			throws NoTicketsAvailableException, UserNotRegisteredException {
+	public void buyTicket(String filmId, String username, BuyTicketHelper buyHelper) {
 		int ticketsRemaining = buyHelper.getRemainingTickets(filmId);
 		
 		if (ticketsRemaining <= 0) {
 			cinemaView.showError("No Base Tickets available");
-			throw new NoTicketsAvailableException();
+			return;
 		}
 		
 		User user = userRepository.getUser(username);
 		
 		if (user == null) {
 			cinemaView.showError("User not registered");
-			throw new UserNotRegisteredException();
+			return;
 		}
 		
 		buyHelper.buyTicket(filmId, user.getUsername());
 		
 		cinemaView.showTickets(userRepository.getTickets(user.getUsername()));
+		this.getAllFilms();
 	}
 
 }
