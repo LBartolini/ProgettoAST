@@ -29,7 +29,7 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
-public class FilmControllerIT {
+public class ControllerIT {
 
 	@Mock
 	private CinemaView cinemaView;
@@ -50,6 +50,7 @@ public class FilmControllerIT {
 	private static final String USERNAME = "USERNAME";
 	
 	private FilmController filmController;
+	private UserController userController;
 	
 	@ClassRule
 	public static MongoDBContainer mongo = new MongoDBContainer("mongo:4.4.3");
@@ -77,11 +78,12 @@ public class FilmControllerIT {
 		database.drop();
 		filmCollection = database.getCollection(FILM_COLLECTION_NAME);
 		filmController = new FilmController(filmRepository, userRepository, cinemaView);
+		userController = new UserController(cinemaView, userRepository);
 		
 		buyBaseTicketHelper = new BuyBaseTicketHelper(filmRepository);
 		buyPremiumTicketHelper = new BuyPremiumTicketHelper(filmRepository);
 		
-		userRepository.registerUser(USERNAME);
+		userController.registerUser(USERNAME);
 		film = new Film(FILM_ID, "NAME_1", "ROOM_1", "DATETIME_1", FILM_BASE_TICKETS_TOTAL, FILM_PREMIUM_TICKETS_TOTAL, 
 				new ArrayList<String>(Collections.nCopies(FILM_INITIAL_BASE_TICKETS, USERNAME)), 
 				new ArrayList<String>(Collections.nCopies(FILM_INITIAL_PREMIUM_TICKETS, USERNAME)));
