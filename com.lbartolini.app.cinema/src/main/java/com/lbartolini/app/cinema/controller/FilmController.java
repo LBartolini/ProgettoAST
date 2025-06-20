@@ -41,6 +41,7 @@ public class FilmController {
 		buyHelper.buyTicket(filmId, user.getUsername());
 		
 		cinemaView.showTickets(userRepository.getTickets(user.getUsername()));
+		this.getAllFilms();
 	}
 
 }

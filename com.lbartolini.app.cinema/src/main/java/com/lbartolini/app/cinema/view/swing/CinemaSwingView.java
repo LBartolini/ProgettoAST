@@ -210,7 +210,6 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		gbc_lblError.gridx = 0;
 		gbc_lblError.gridy = 7;
 		contentPane.add(getLblError(), gbc_lblError);
-
 	}
 
 	@Override
@@ -257,6 +256,7 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 
 	public void setFilmController(FilmController filmController) {
 		this.filmController = filmController;
+		filmController.getAllFilms();
 	}
 
 	public void setUserController(UserController userController) {

@@ -71,6 +71,7 @@ public class CinemaSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Buy Base")).requireDisabled();
 		window.button(JButtonMatcher.withText("Buy Premium")).requireDisabled();
 		window.label("errorLabel").requireText(" ");
+		verify(filmController).getAllFilms();
 	}
 
 	@Test @GUITest

@@ -131,6 +131,7 @@ public class FilmControllerTest {
 		inOrder.verify(buyHelper).buyTicket(FILM_ID_1, USERNAME);
 		inOrder.verify(userRepository).getTickets(USERNAME);
 		inOrder.verify(cinemaView).showTickets(anyList());
+		inOrder.verify(cinemaView).showAllFilms(anyList());
 	}
 	
 	@Test
@@ -147,6 +148,7 @@ public class FilmControllerTest {
 		inOrder.verify(buyHelper).buyTicket(FILM_ID_1, USERNAME);
 		inOrder.verify(userRepository).getTickets(USERNAME);
 		inOrder.verify(cinemaView).showTickets(anyList());
+		inOrder.verify(cinemaView).showAllFilms(anyList());
 	}
 	
 }
