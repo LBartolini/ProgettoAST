@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.lbartolini.app.cinema.controller.FilmController;
+import com.lbartolini.app.cinema.controller.UserController;
 import com.lbartolini.app.cinema.model.Film;
 import com.lbartolini.app.cinema.model.Ticket;
 import com.lbartolini.app.cinema.view.CinemaView;
@@ -46,6 +48,8 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 	private JPanel panel_1;
 	private JButton btnBuyBaseTicket;
 	private JButton btnBuyPremiumTicket;
+	private FilmController filmController;
+	private UserController userController;
 	
 	/**
 	 * Create the frame.
@@ -249,6 +253,14 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		
 		btnBuyBaseTicket.setEnabled(!txtUsername.getText().trim().isEmpty() && baseTicketsLeft > 0);
 		btnBuyPremiumTicket.setEnabled(!txtUsername.getText().trim().isEmpty() && premiumTicketsLeft > 0);
+	}
+
+	public void setFilmController(FilmController filmController) {
+		this.filmController = filmController;
+	}
+
+	public void setUserController(UserController userController) {
+		this.userController = userController;
 	}
 
 }

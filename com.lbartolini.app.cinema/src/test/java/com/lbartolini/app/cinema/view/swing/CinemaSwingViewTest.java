@@ -1,6 +1,7 @@
 package com.lbartolini.app.cinema.view.swing;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,26 +16,46 @@ import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
+import com.lbartolini.app.cinema.controller.FilmController;
+import com.lbartolini.app.cinema.controller.UserController;
 import com.lbartolini.app.cinema.model.Film;
 import com.lbartolini.app.cinema.model.Ticket;
 import com.lbartolini.app.cinema.model.User;
 
 @RunWith(GUITestRunner.class)
 public class CinemaSwingViewTest extends AssertJSwingJUnitTestCase {
+	
+	@Mock
+	private FilmController filmController;
+	
+	@Mock
+	private UserController userController;
+	
+	private AutoCloseable closeable;
 
 	private CinemaSwingView cinemaSwingView;
 	private FrameFixture window;
 
 	@Override
 	protected void onSetUp() throws Exception {
+		closeable = MockitoAnnotations.openMocks(this);
 		GuiActionRunner.execute(() -> {
 			cinemaSwingView = new CinemaSwingView();
+			cinemaSwingView.setFilmController(filmController);
+			cinemaSwingView.setUserController(userController);
 			return cinemaSwingView;
 		});
 		
 		window = new FrameFixture(robot(), cinemaSwingView);
 		window.show();
+	}
+	
+	@Override
+	protected void onTearDown() throws Exception {
+		closeable.close();
 	}
 	
 	@Test @GUITest
@@ -158,5 +179,15 @@ public class CinemaSwingViewTest extends AssertJSwingJUnitTestCase {
 		assertThat(window.list("ticketList").contents()).containsExactly(ticket1.toString(), ticket2.toString());
 		window.label("errorLabel").requireText(" ");
 	}
-
+	
+	
+	@Test @GUITest
+	public void testLogicLoginButton() {
+		String username = "USERNAME";
+		window.textBox("usernameTextBox").enterText(username);
+		
+		window.button(JButtonMatcher.withText("Login")).click();
+		
+		verify(userController).getTickets(username);
+	}
 }
