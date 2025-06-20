@@ -6,6 +6,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.lbartolini.app.cinema.controller.FilmController;
+import com.lbartolini.app.cinema.controller.UserController;
+import com.lbartolini.app.cinema.controller.helper.BuyBaseTicketHelper;
+import com.lbartolini.app.cinema.controller.helper.BuyPremiumTicketHelper;
 import com.lbartolini.app.cinema.model.Film;
 import com.lbartolini.app.cinema.model.Ticket;
 import com.lbartolini.app.cinema.view.CinemaView;
@@ -25,6 +29,8 @@ import javax.swing.WindowConstants;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class CinemaSwingView extends JFrame implements CinemaView {
 
@@ -47,10 +53,14 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 	private JButton btnBuyBaseTicket;
 	private JButton btnBuyPremiumTicket;
 	
+	private transient FilmController filmController;
+	private transient UserController userController;
+	
 	/**
 	 * Create the frame.
 	 */
-	public CinemaSwingView() {
+	public CinemaSwingView(BuyBaseTicketHelper buyBaseTicketHelper, BuyPremiumTicketHelper buyPremiumTicketHelper) {
+
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -104,6 +114,12 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		panel.setLayout(gbl_panel);
 		
 		btnLogin = new JButton("Login");
+		btnLogin.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				userController.getTickets(txtUsername.getText().trim());
+			}
+		});
 		btnLogin.setEnabled(false);
 		GridBagConstraints gbc_btnLogin = new GridBagConstraints();
 		gbc_btnLogin.fill = GridBagConstraints.BOTH;
@@ -113,6 +129,12 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		panel.add(btnLogin, gbc_btnLogin);
 		
 		btnRegister = new JButton("Register");
+		btnRegister.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				userController.registerUser(txtUsername.getText().trim());
+			}
+		});
 		btnRegister.setEnabled(false);
 		GridBagConstraints gbc_btnRegister = new GridBagConstraints();
 		gbc_btnRegister.fill = GridBagConstraints.BOTH;
@@ -166,6 +188,15 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		panel_1.setLayout(gbl_panel_1);
 		
 		btnBuyBaseTicket = new JButton("Buy Base");
+		btnBuyBaseTicket.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				filmController.buyTicket(
+						listFilm.getSelectedValue().getId(), 
+						txtUsername.getText().trim(), 
+						buyBaseTicketHelper);
+			}
+		});
 		btnBuyBaseTicket.setEnabled(false);
 		GridBagConstraints gbc_btnBuyBaseTicket = new GridBagConstraints();
 		gbc_btnBuyBaseTicket.fill = GridBagConstraints.BOTH;
@@ -175,6 +206,15 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		panel_1.add(btnBuyBaseTicket, gbc_btnBuyBaseTicket);
 		
 		btnBuyPremiumTicket = new JButton("Buy Premium");
+		btnBuyPremiumTicket.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				filmController.buyTicket(
+						listFilm.getSelectedValue().getId(), 
+						txtUsername.getText().trim(), 
+						buyPremiumTicketHelper);
+			}
+		});
 		btnBuyPremiumTicket.setEnabled(false);
 		GridBagConstraints gbc_btnBuyPremiumTicket = new GridBagConstraints();
 		gbc_btnBuyPremiumTicket.fill = GridBagConstraints.BOTH;
@@ -206,7 +246,6 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		gbc_lblError.gridx = 0;
 		gbc_lblError.gridy = 7;
 		contentPane.add(getLblError(), gbc_lblError);
-
 	}
 
 	@Override
@@ -249,6 +288,15 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		
 		btnBuyBaseTicket.setEnabled(!txtUsername.getText().trim().isEmpty() && baseTicketsLeft > 0);
 		btnBuyPremiumTicket.setEnabled(!txtUsername.getText().trim().isEmpty() && premiumTicketsLeft > 0);
+	}
+
+	public void setFilmController(FilmController filmController) {
+		this.filmController = filmController;
+		this.filmController.getAllFilms();
+	}
+
+	public void setUserController(UserController userController) {
+		this.userController = userController;
 	}
 
 }

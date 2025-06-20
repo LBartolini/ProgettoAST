@@ -1,7 +1,6 @@
 package com.lbartolini.app.cinema.controller;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
@@ -20,8 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.lbartolini.app.cinema.controller.exceptions.NoTicketsAvailableException;
-import com.lbartolini.app.cinema.controller.exceptions.UserNotRegisteredException;
 import com.lbartolini.app.cinema.controller.helper.BuyTicketHelper;
 import com.lbartolini.app.cinema.model.Film;
 import com.lbartolini.app.cinema.model.User;
@@ -98,7 +95,7 @@ public class FilmControllerTest {
 	public void testBuyTicketWhenNoTicketsAvailable() {
 		when(buyHelper.getRemainingTickets(FILM_ID_1)).thenReturn(0);
 		
-		assertThrows(NoTicketsAvailableException.class, () -> filmController.buyTicket(FILM_ID_1, USERNAME, buyHelper));
+		filmController.buyTicket(FILM_ID_1, USERNAME, buyHelper);
 		
 		verify(buyHelper).getRemainingTickets(FILM_ID_1);
 		verify(cinemaView).showError("No Base Tickets available");
@@ -111,7 +108,7 @@ public class FilmControllerTest {
 		when(buyHelper.getRemainingTickets(FILM_ID_1)).thenReturn(1);
 		when(userRepository.getUser(USERNAME)).thenReturn(null);
 		
-		assertThrows(UserNotRegisteredException.class, () -> filmController.buyTicket(FILM_ID_1, USERNAME, buyHelper));
+		filmController.buyTicket(FILM_ID_1, USERNAME, buyHelper);
 		
 		InOrder inOrder = inOrder(buyHelper, userRepository, cinemaView);
 		inOrder.verify(buyHelper).getRemainingTickets(FILM_ID_1);
@@ -134,6 +131,7 @@ public class FilmControllerTest {
 		inOrder.verify(buyHelper).buyTicket(FILM_ID_1, USERNAME);
 		inOrder.verify(userRepository).getTickets(USERNAME);
 		inOrder.verify(cinemaView).showTickets(anyList());
+		inOrder.verify(cinemaView).showAllFilms(anyList());
 	}
 	
 	@Test
@@ -150,6 +148,7 @@ public class FilmControllerTest {
 		inOrder.verify(buyHelper).buyTicket(FILM_ID_1, USERNAME);
 		inOrder.verify(userRepository).getTickets(USERNAME);
 		inOrder.verify(cinemaView).showTickets(anyList());
+		inOrder.verify(cinemaView).showAllFilms(anyList());
 	}
 	
 }
