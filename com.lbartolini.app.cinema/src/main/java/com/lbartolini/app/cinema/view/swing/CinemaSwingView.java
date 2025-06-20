@@ -53,8 +53,8 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 	private JButton btnBuyBaseTicket;
 	private JButton btnBuyPremiumTicket;
 	
-	private FilmController filmController;
-	private UserController userController;
+	private transient FilmController filmController;
+	private transient UserController userController;
 	
 	/**
 	 * Create the frame.
