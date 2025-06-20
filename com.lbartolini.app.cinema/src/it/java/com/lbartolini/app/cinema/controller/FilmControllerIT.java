@@ -103,6 +103,9 @@ public class FilmControllerIT {
 	
 	@Test
 	public void testBuyBaseTicket() {
+		filmController.buyTicket(FILM_ID, "another_user", buyBaseTicketHelper);
+		verify(cinemaView).showError("User not registered");
+		
 		filmController.buyTicket(FILM_ID, USERNAME, buyBaseTicketHelper);
 		
 		film.getBaseTickets().add(USERNAME);
@@ -117,6 +120,9 @@ public class FilmControllerIT {
 	
 	@Test
 	public void testBuyPremiumTicket() {
+		filmController.buyTicket(FILM_ID, "another_user", buyPremiumTicketHelper);
+		verify(cinemaView).showError("User not registered");
+		
 		filmController.buyTicket(FILM_ID, USERNAME, buyPremiumTicketHelper);
 		
 		film.getPremiumTickets().add(USERNAME);
