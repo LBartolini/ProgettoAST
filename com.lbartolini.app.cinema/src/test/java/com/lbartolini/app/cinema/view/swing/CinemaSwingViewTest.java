@@ -184,11 +184,21 @@ public class CinemaSwingViewTest extends AssertJSwingJUnitTestCase {
 	
 	@Test @GUITest
 	public void testLogicLoginButton() {
-		String username = "USERNAME";
+		String username = " username ";
 		window.textBox("usernameTextBox").enterText(username);
 		
 		window.button(JButtonMatcher.withText("Login")).click();
 		
-		verify(userController).getTickets(username);
+		verify(userController).getTickets(username.trim());
+	}
+	
+	@Test @GUITest
+	public void testLogicRegisterButton() {
+		String username = " username ";
+		window.textBox("usernameTextBox").enterText(username);
+		
+		window.button(JButtonMatcher.withText("Register")).click();
+		
+		verify(userController).registerUser(username.trim());
 	}
 }

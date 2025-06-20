@@ -27,6 +27,8 @@ import javax.swing.WindowConstants;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class CinemaSwingView extends JFrame implements CinemaView {
 
@@ -108,6 +110,12 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		panel.setLayout(gbl_panel);
 		
 		btnLogin = new JButton("Login");
+		btnLogin.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				userController.getTickets(txtUsername.getText().trim());
+			}
+		});
 		btnLogin.setEnabled(false);
 		GridBagConstraints gbc_btnLogin = new GridBagConstraints();
 		gbc_btnLogin.fill = GridBagConstraints.BOTH;
@@ -117,6 +125,12 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		panel.add(btnLogin, gbc_btnLogin);
 		
 		btnRegister = new JButton("Register");
+		btnRegister.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				userController.registerUser(txtUsername.getText().trim());
+			}
+		});
 		btnRegister.setEnabled(false);
 		GridBagConstraints gbc_btnRegister = new GridBagConstraints();
 		gbc_btnRegister.fill = GridBagConstraints.BOTH;
@@ -256,7 +270,7 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 
 	public void setFilmController(FilmController filmController) {
 		this.filmController = filmController;
-		filmController.getAllFilms();
+		this.filmController.getAllFilms();
 	}
 
 	public void setUserController(UserController userController) {
