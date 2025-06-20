@@ -132,6 +132,7 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 		btnRegister.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				resetErrorMessage();
 				userController.registerUser(txtUsername.getText().trim());
 			}
 		});
@@ -250,6 +251,7 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 
 	@Override
 	public void showAllFilms(List<Film> list) {
+		listFilmModel.clear();
 		list.stream().forEach(listFilmModel::addElement);
 		resetErrorMessage();
 	}
@@ -261,12 +263,17 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 
 	@Override
 	public void showTickets(List<Ticket> list) {
+		listTicketModel.clear();
 		list.stream().forEach(listTicketModel::addElement);
 		resetErrorMessage();
 	}
 
 	DefaultListModel<Film> getListFilmModel() {
 		return listFilmModel;
+	}
+	
+	public DefaultListModel<Ticket> getListTicketModel() {
+		return listTicketModel;
 	}
 	
 	private void resetErrorMessage() {

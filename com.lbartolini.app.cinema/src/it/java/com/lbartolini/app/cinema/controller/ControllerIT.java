@@ -78,7 +78,7 @@ public class ControllerIT {
 		database.drop();
 		filmCollection = database.getCollection(FILM_COLLECTION_NAME);
 		filmController = new FilmController(filmRepository, userRepository, cinemaView);
-		userController = new UserController(cinemaView, userRepository);
+		userController = new UserController(userRepository, cinemaView);
 		
 		buyBaseTicketHelper = new BuyBaseTicketHelper(filmRepository);
 		buyPremiumTicketHelper = new BuyPremiumTicketHelper(filmRepository);

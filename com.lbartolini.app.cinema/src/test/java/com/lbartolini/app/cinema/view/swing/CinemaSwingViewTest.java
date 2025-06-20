@@ -119,8 +119,7 @@ public class CinemaSwingViewTest extends AssertJSwingJUnitTestCase {
 		buyPremium.requireDisabled();
 		
 		window.list("filmList").selectItem(0);
-		window.textBox("usernameTextBox").setText("");
-		window.textBox("usernameTextBox").enterText(" ");
+		window.textBox("usernameTextBox").setText("").enterText(" ");
 		
 		buyBase.requireDisabled();
 		buyPremium.requireDisabled();
@@ -156,36 +155,43 @@ public class CinemaSwingViewTest extends AssertJSwingJUnitTestCase {
 	
 	@Test @GUITest
 	public void testShowAllFilms() {
-		GuiActionRunner.execute(() -> {
-			cinemaSwingView.getLblError().setText("some error message");
-		});
 		Film film1 = new Film("ID_1", "NAME_1", "ROOM_1", "DATETIME_1", 10, 10, Collections.emptyList(), Collections.emptyList());
 		Film film2 = new Film("ID_2", "NAME_2", "ROOM_2", "DATETIME_2", 5, 5, Collections.emptyList(), Collections.emptyList());
+		Film film3 = new Film("ID_3", "NAME_3", "ROOM_3", "DATETIME_3", 8, 8, Collections.emptyList(), Collections.emptyList());
 		
 		GuiActionRunner.execute(() -> {
-			cinemaSwingView.showAllFilms(Arrays.asList(film1, film2));
+			cinemaSwingView.getLblError().setText("some error message");
+			cinemaSwingView.getListFilmModel().addElement(film1);
 		});
 		
-		assertThat(window.list("filmList").contents()).containsExactly(film1.toString(), film2.toString());
+		GuiActionRunner.execute(() -> {
+			cinemaSwingView.showAllFilms(Arrays.asList(film1, film2, film3));
+		});
+		
+		assertThat(window.list("filmList").contents()).containsExactly(film1.toString(), film2.toString(), film3.toString());
 		window.label("errorLabel").requireText(" ");
 	}
 	
 	@Test @GUITest
 	public void testShowTickets() {
-		GuiActionRunner.execute(() -> {
-			cinemaSwingView.getLblError().setText("some error message");
-		});
 		User user = new User("USERNAME");
 		Film film1 = new Film("ID_1", "NAME_1", "ROOM_1", "DATETIME_1", 10, 10, Collections.nCopies(1, "USERNAME"), Collections.nCopies(1, "USERNAME"));
 		Ticket ticket1 = new Ticket(film1, user, 1, 1);
 		Film film2 = new Film("ID_2", "NAME_2", "ROOM_2", "DATETIME_2", 10, 10, Collections.nCopies(2, "USERNAME"), Collections.nCopies(2, "USERNAME"));
 		Ticket ticket2 = new Ticket(film2, user, 2, 2);
+		Film film3 = new Film("ID_3", "NAME_3", "ROOM_3", "DATETIME_3", 10, 10, Collections.nCopies(2, "USERNAME"), Collections.nCopies(2, "USERNAME"));
+		Ticket ticket3 = new Ticket(film3, user, 2, 2);
 		
 		GuiActionRunner.execute(() -> {
-			cinemaSwingView.showTickets(Arrays.asList(ticket1, ticket2));
+			cinemaSwingView.getLblError().setText("some error message");
+			cinemaSwingView.getListTicketModel().addElement(ticket1);
+		});
+		
+		GuiActionRunner.execute(() -> {
+			cinemaSwingView.showTickets(Arrays.asList(ticket1, ticket2, ticket3));
 		});
 
-		assertThat(window.list("ticketList").contents()).containsExactly(ticket1.toString(), ticket2.toString());
+		assertThat(window.list("ticketList").contents()).containsExactly(ticket1.toString(), ticket2.toString(), ticket3.toString());
 		window.label("errorLabel").requireText(" ");
 	}
 	
@@ -202,12 +208,16 @@ public class CinemaSwingViewTest extends AssertJSwingJUnitTestCase {
 	
 	@Test @GUITest
 	public void testLogicRegisterButton() {
+		GuiActionRunner.execute(() -> {
+			cinemaSwingView.getLblError().setText("some error message");
+		});
 		String username = " username ";
 		window.textBox("usernameTextBox").enterText(username);
 		
 		window.button(JButtonMatcher.withText("Register")).click();
 		
 		verify(userController).registerUser(username.trim());
+		window.label("errorLabel").requireText(" ");
 	}
 	
 	@Test @GUITest
