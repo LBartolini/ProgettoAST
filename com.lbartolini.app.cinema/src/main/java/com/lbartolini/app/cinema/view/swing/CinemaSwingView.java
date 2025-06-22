@@ -60,6 +60,7 @@ public class CinemaSwingView extends JFrame implements CinemaView {
 	 * Create the frame.
 	 */
 	public CinemaSwingView(BuyBaseTicketHelper buyBaseTicketHelper, BuyPremiumTicketHelper buyPremiumTicketHelper) {
+		setTitle("Cinema View");
 
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
