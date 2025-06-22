@@ -2,6 +2,8 @@ package com.lbartolini.app.cinema.app.swing;
 
 import java.awt.EventQueue;
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.lbartolini.app.cinema.controller.FilmController;
 import com.lbartolini.app.cinema.controller.UserController;
@@ -54,9 +56,9 @@ public class CinemaSwingApp implements Callable<Void>{
 				cinemaSwingView.setUserController(userController);
 				cinemaSwingView.setVisible(true);
 			} catch (Exception e) {
-				System.out.println("Some error occured");
+				Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Exception in CinemaApplication", e);
 			}
-		});;
+		});
 		
 		return null;
 	}

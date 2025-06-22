@@ -31,7 +31,7 @@
     <dockermavenplugin.version>0.46.0</dockermavenplugin.version>
 
     <sonar.coverage.exclusions>
-      **/model/*.*
+      **/model/*.*,
       **/CinemaSwingApp.*
     </sonar.coverage.exclusions>
     <sonar.junit.reportPaths>
