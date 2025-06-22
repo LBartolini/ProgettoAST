@@ -265,6 +265,7 @@
         </configuration>
         <executions>
           <execution>
+            <id>default-it</id>
             <goals>
               <goal>integration-test</goal>
               <goal>verify</goal>
@@ -294,7 +295,7 @@
         <configuration>
           <images>
             <image>
-              <name>mongo:5</name>
+              <name>mongo:4.4.3</name>
               <run>
                 <ports>
                   <port>mongo.mapped.port:27017</port>
@@ -306,7 +307,7 @@
         <executions>
           <execution>
             <id>docker-start</id>
-            <phase>post-integration-test</phase>
+            <phase>pre-integration-test</phase>
             <goals>
               <goal>start</goal>
             </goals>
