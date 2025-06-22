@@ -68,6 +68,7 @@ public class CinemaSwingViewTest extends AssertJSwingJUnitTestCase {
 	
 	@Test @GUITest
 	public void testInitialConfiguration() {
+		window.requireTitle("Cinema View");
 		window.label(JLabelMatcher.withText("username"));
 		window.textBox("usernameTextBox").requireEnabled();
 		window.button(JButtonMatcher.withText("Login")).requireDisabled();
