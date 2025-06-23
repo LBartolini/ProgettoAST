@@ -34,8 +34,14 @@
       **/model/*.*,
       **/CinemaSwingApp.*
     </sonar.coverage.exclusions>
+    <sonar.tests>
+      ${project.basedir}/src/test/java,
+      ${project.basedir}/src/it/java,
+      ${project.basedir}/src/bdd/java
+    </sonar.tests>
     <sonar.junit.reportPaths>
-      ${project.build.directory}/surefire-reports
+      ${project.build.directory}/surefire-reports,
+      ${project.build.directory}/failsafe-reports
     </sonar.junit.reportPaths>
 
     <sonar.issue.ignore.multicriteria>e11, e12, e13, e14, e15</sonar.issue.ignore.multicriteria>
